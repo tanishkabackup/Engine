@@ -1,0 +1,129 @@
+# =========================
+# GENERAL
+# =========================
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
+*.swo
+*.pid
+*.seed
+*.pid.lock
+
+# =========================
+# ENV FILES (DO NOT COMMIT)
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# NODE / NEXT.JS (FRONTEND)
+# =========================
+
+# dependencies
+node_modules/
+
+# next.js build output
+.next/
+out/
+
+# production builds
+build/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# vercel
+.vercel/
+
+# typescript
+*.tsbuildinfo
+
+# =========================
+# .NET / VISUAL STUDIO (BACKEND)
+# =========================
+
+# build results
+bin/
+obj/
+out/
+publish/
+
+# user-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# visual studio cache
+.vs/
+
+# test results
+TestResults/
+*.trx
+
+# nuget
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# coverage
+coverage/
+coverage*.json
+coverage*.xml
+
+# =========================
+# DOCKER
+# =========================
+
+# docker overrides / local configs
+docker-compose.override.yml
+
+# docker env files
+.env.docker
+
+# =========================
+# POSTGRESQL
+# =========================
+
+# local database data (if volume mapped)
+postgres-data/
+pgdata/
+
+# backups / dumps
+*.sql
+*.dump
+
+# =========================
+# DATABASE / LOCAL FILES
+# =========================
+*.mdf
+*.ldf
+*.sqlite
+*.db
+
+# =========================
+# IDEs / EDITORS
+# =========================
+
+# vscode
+.vscode/
+
+# jetbrains / rider / resharper
+.idea/
+_ReSharper*/
+
+# =========================
+# OPTIONAL (UNCOMMENT IF NEEDED)
+# =========================
+
+# lock files (recommended to KEEP)
+# package-lock.json
+# yarn.lock

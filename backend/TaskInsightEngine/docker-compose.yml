@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  insight-cache:
+    build:
+      context: .
+      dockerfile: infrastructure/redis/Dockerfile
+    image: redis:latest
+    container_name: taskinsightcache
+    ports:
+      - "${REDIS_PORT}:6379"
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    restart: always
+  
+  # insight-api:
+  #   build: 
+  #    context: .
+  #    dockerfile: TaskInsightEngine.Api/Dockerfile
+  #   depends_on:
+  #     - insight-cache
+  #   image: taskinsightapi
+  #   container_name: taskinsightapi
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - ConnectionStrings__Redis=insight-cache:6379,password=${REDIS_PASSWORD}
+  #   ports:
+  #     - "5000:8080"
+
+volumes:
+  redis_data:
