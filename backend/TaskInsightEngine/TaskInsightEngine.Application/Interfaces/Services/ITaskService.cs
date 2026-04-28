@@ -12,5 +12,6 @@ namespace TaskInsightEngine.Application.Interfaces.Services
         Task<AddTaskImpedimentResponse> AddTaskImpedimentAsync(AddTaskImpedimentRequest request);
         Task<GetTaskImpedimentResponse> GetTaskImpedimentAsync(GetTaskImpedimentRequest request);
         Task<ImpedimentCommentDto> AddImpedimentCommentAsync(AddImpedimentCommentRequest request);
+        Task<GetTaskImpedimentCommentsResponse> GetTaskImpedimentCommentsAsync(GetTaskImpedimentCommentsRequest request);
     }
 }

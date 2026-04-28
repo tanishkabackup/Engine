@@ -154,5 +154,19 @@ namespace TaskInsightEngine.Infrastructure.Repositories
                 throw;
             }
         }
+
+        public async Task<List<TaskImpedimentComment>> GetTaskImpedimentCommentsAsync(int taskImpedimentId)
+        {
+            _logger.LogInformation("Database operations for {Method} started ", nameof(GetTaskImpedimentCommentsAsync));
+            try
+            {
+                return await _context.TaskImpedimentComments.Include(c => c.Member).ThenInclude(u => u.User).Where(t => t.TaskImpedimentId == taskImpedimentId).OrderBy(t => t.CreatedAt).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Database error for {Method}", nameof(GetTaskImpedimentCommentsAsync));
+                throw;
+            }
+        }
     }
 }

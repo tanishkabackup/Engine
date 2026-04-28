@@ -1,6 +1,6 @@
 import { api } from "../../../services/apiClient";
-import { AddTaskImpedimentRequest, AssignTaskRequest, CreateTaskRequest, DailyTaskUpdateRequest, GetAllProjectsRequest, GetDailyTaskUpdateRequest, GetProjectMembersRequest, GetTaskImpedimentRequest } from "../../../types/request";
-import { AddTaskImpedimentResponse, AssignTaskResponse, CreateTaskResponse, GetAllProjectsResponse, GetDailyTaskUpdatesResponse, GetProjectMembersResponse, GetTaskImpedimentResponse } from "../../../types/response";
+import { AddTaskImpedimentRequest, AssignTaskRequest, CreateTaskRequest, DailyTaskUpdateRequest, GetAllProjectsRequest, GetDailyTaskUpdateRequest, GetProjectMembersRequest, GetTaskImpedimentCommentsRequest, GetTaskImpedimentRequest } from "../../../types/request";
+import { AddTaskImpedimentResponse, AssignTaskResponse, CreateTaskResponse, GetAllProjectsResponse, GetDailyTaskUpdatesResponse, GetProjectMembersResponse, GetTaskImpedimentCommentsResponse, GetTaskImpedimentResponse } from "../../../types/response";
 
 export const getProjectMembers = async(data :GetProjectMembersRequest) : Promise<GetProjectMembersResponse> =>{
   return await api.post<GetProjectMembersResponse>("/Project/GetAllProjectMembers",data);
@@ -37,4 +37,9 @@ export const AddTaskImpediment = async(data:AddTaskImpedimentRequest): Promise<A
 export const GetTaskImpediments = async(data:GetTaskImpedimentRequest): Promise<GetTaskImpedimentResponse>=>
 {
     return await api.post("/Task/GetTaskImpediments",data)
+}
+
+export const GetTaskImpedimentComments = async(data:GetTaskImpedimentCommentsRequest): Promise<GetTaskImpedimentCommentsResponse>=>
+{
+    return await api.post("/Task/GetTaskImpedimentComments",data)
 }

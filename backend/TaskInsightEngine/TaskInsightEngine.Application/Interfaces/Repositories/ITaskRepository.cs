@@ -13,5 +13,6 @@ namespace TaskInsightEngine.Application.Interfaces.Repositories
         Task<List<TaskAssignment>> GetTaskAssignmentsAsync(int taskItemId);
         Task<List<TaskImpediment>> GetTaskImpedimentsAsync(int taskItemId);
         Task AddImpedimentCommentAsync(TaskImpedimentComment comment);
+        Task<List<TaskImpedimentComment>> GetTaskImpedimentCommentsAsync(int taskImpedimentId);
     }
 }

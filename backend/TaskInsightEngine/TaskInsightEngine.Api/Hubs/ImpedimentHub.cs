@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using System.Security.Claims;
 using TaskInsightEngine.Application.Dtos.TaskImpediment;
 using TaskInsightEngine.Application.Interfaces.Services;
 using TaskInsightEngine.Domain.Constants;
@@ -11,12 +12,12 @@ namespace TaskInsightEngine.Api.Hubs
     {
         public async Task SendComment(SendImpedimentCommentRequest request)
         {
-            var userFullName = Context.User.FindFirst(CacheKeys.FullName).Value;
+            var userEmail = Context.User.FindFirst(ClaimTypes.Email).Value;
             var saveImpedimentComment = new AddImpedimentCommentRequest
             {
                 TaskImpedimentId = request.TaskImpedimentId,
                 Comment = request.Message,
-                UserFullName = userFullName
+                Email = userEmail
             };
 
             var comment = await _service.AddImpedimentCommentAsync(saveImpedimentComment);
@@ -35,5 +36,6 @@ namespace TaskInsightEngine.Api.Hubs
        {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, ImpedimentKeys.Group(impedimentId));
        }
+
     }
 }

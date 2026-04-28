@@ -308,12 +308,13 @@ namespace TaskInsightEngine.Application.Services
             _logger.LogInformation("The process for {Method} has started", nameof(AddImpedimentCommentAsync));
             try
             {
-                var projectMemberId = await _projectRepository.GetProjectMemberByIdAsync(request.UserFullName);
+                var projectMemberId = await _projectRepository.GetProjectMemberByEmailAsync(request.Email);
                 var ImpedimentComment = new TaskImpedimentComment
                 {
                     TaskImpedimentId = request.TaskImpedimentId,
                     Comment = request.Comment,
-                    CreatedBy = projectMemberId.ProjectMemberId
+                    CreatedBy = projectMemberId.ProjectMemberId,
+
                 };
 
                 await _taskRepository.AddImpedimentCommentAsync(ImpedimentComment);
@@ -324,6 +325,7 @@ namespace TaskInsightEngine.Application.Services
                 {
                     CommentId = ImpedimentComment.TaskImpedimentCommentId ,
                     CreatedAt = ImpedimentComment.CreatedAt,
+                    Email = projectMemberId.User.FullName,
                     FullName = request.UserFullName,
                     Message = ImpedimentComment.Comment ,
                 };
@@ -331,6 +333,34 @@ namespace TaskInsightEngine.Application.Services
             catch(Exception ex)
             {
                 _logger.LogError("An error ocurred in the {Method}", nameof(AddImpedimentCommentAsync));
+                throw;
+            }
+        }
+
+        public async Task<GetTaskImpedimentCommentsResponse> GetTaskImpedimentCommentsAsync(GetTaskImpedimentCommentsRequest request)
+        {
+            _logger.LogInformation("The process for {Method} has started ", nameof(GetTaskImpedimentCommentsAsync));
+            try
+            {
+                var response = await _taskRepository.GetTaskImpedimentCommentsAsync(request.TaskImpedimentId);
+                var comments = response.Select(comment => new ImpedimentCommentDto
+                {
+                    CommentId = comment.TaskImpedimentCommentId,
+                    FullName = comment.Member.User.FullName,
+                    Email = comment.Member.User.Email,
+                    Message = comment.Comment,
+                    CreatedAt = comment.CreatedAt
+
+                }).ToList();
+
+                return new GetTaskImpedimentCommentsResponse
+                {
+                    ImpedimentComments = comments
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occured in the {Method}", nameof(GetTaskImpedimentCommentsAsync));
                 throw;
             }
         }

@@ -78,5 +78,16 @@ namespace TaskInsightEngine.Api.Controllers
             return Ok(response);
         }
 
+
+        [HttpPost]
+        [Authorize]
+        [ApiExplorerSettings(GroupName = "v1")]
+        [Route("GetTaskImpedimentComments")]
+        public async Task<IActionResult> GetTaskImpedimentComments(GetTaskImpedimentCommentsRequest request)
+        {
+            var response = await _taskService.GetTaskImpedimentCommentsAsync(request);
+            return Ok(response);
+        }
+
     }
 }

@@ -105,7 +105,13 @@ export interface ImpedimentCommentDto
 {
   commentId : number;
   fullName: string;
+  email: string;
   createdAt: Date ;
   message: string;
 
+}
+
+export interface GetTaskImpedimentCommentsRequest
+{
+   taskImpedimentId : number;
 }

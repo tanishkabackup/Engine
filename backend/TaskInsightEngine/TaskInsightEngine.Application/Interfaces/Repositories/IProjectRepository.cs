@@ -8,7 +8,7 @@ namespace TaskInsightEngine.Application.Interfaces.Repositories
     {
         Task AddNewProjectAsync(Project project);
         Task AddProjectMembersAsync(List<ProjectMember> projectMember);
-        Task<ProjectMember?> GetProjectMemberByIdAsync(string userFullname);
+        Task<ProjectMember?> GetProjectMemberByEmailAsync(string email);
         Task<GetProjectsResponse> GetProjectDetailsAsync(GetProjectsRequest project);
         Task<List<ProjectMember>> GetProjectMembersAsync(GetProjectMembersRequest request);
         Task<List<TaskDetailDto>> GetProjectTasksAsync(GetProjectTasksRequest request);

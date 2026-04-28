@@ -155,13 +155,13 @@ namespace TaskInsightEngine.Infrastructure.Repositories
             }
         }
 
-        public async Task<ProjectMember?> GetProjectMemberByIdAsync(string userFullName)
+        public async Task<ProjectMember?> GetProjectMemberByEmailAsync(string userEmail)
         {
             return await _context.ProjectMembers
                 .Include(pm => pm.User)
                 .ThenInclude(u => u.Role)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.User.FullName == userFullName);
+                .FirstOrDefaultAsync(u => u.User.Email == userEmail);
         }
     }
 }

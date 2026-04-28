@@ -1,4 +1,5 @@
 import { JSX } from "react/jsx-runtime";
+import { ImpedimentCommentDto } from "./request";
 
 export interface GetAllUsersResponse {
        users: UserDetail[];
@@ -123,4 +124,9 @@ export interface TaskImpedimentDetail
     createdBy: string;
     lastUpdated: Date;
     createdAt:Date;
+}
+
+export interface GetTaskImpedimentCommentsResponse
+{
+    impedimentComments : ImpedimentCommentDto[];
 }
