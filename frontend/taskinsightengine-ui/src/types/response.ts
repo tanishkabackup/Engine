@@ -77,7 +77,7 @@ export interface TaskDetail{
     taskId: number;
     title : string ;
     description: string;
-    priorityId: string;
+    priorityStatus: string;
     hours: number;
     expectedEta: Date;
     createdAt: Date;

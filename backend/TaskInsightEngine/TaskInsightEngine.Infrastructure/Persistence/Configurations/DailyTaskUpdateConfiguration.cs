@@ -24,6 +24,10 @@ namespace TaskInsightEngine.Infrastructure.Persistence.Configurations
                     .WithMany(dtu => dtu.DailyTaskUpdateStatus)
                     .HasForeignKey(pm => pm.ProjectMemberId);
 
+            builder.HasOne(x => x.TaskItem)
+                   .WithMany(t => t.DailyTaskUpdateStatuses)
+                   .HasForeignKey(x => x.TaskId);
+
             builder.Property(c => c.CreatedDate)
                    .HasDefaultValueSql("NOW()");
 

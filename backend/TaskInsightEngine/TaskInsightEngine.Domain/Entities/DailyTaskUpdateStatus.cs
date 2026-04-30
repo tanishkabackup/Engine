@@ -12,6 +12,7 @@
         public DateTime UpdatedEta { get; set; }
         public DateTime UpdatedDate { get; set; }
         public ProjectMember ProjectMember { get; set; }
+        public TaskItem TaskItem { get; set; }
     }
 }
  
