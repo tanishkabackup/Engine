@@ -74,11 +74,7 @@ export default function UpdateTaskForm({ task, memberId, onBack }: UpdateTaskFor
     console.log("Task Data Received:", task);
     const formattedEta = task.expectedEta ? new Date(task.expectedEta).toISOString().split('T')[0] : "";
 
-    const latestUpdate = taskUpdates?.slice().sort((a, b) =>
-        new Date(b.lastUpdatedDate).getTime() - new Date(a.lastUpdatedDate).getTime()
-    )[0];
-
-    const currentStatus = latestUpdate?.status;
+    const currentStatus = taskUpdates?.[0]?.status ?? null;
     return (
         <div className="max-w-5xl mx-auto p-8 bg-white rounded-[2.5rem] shadow-sm border border-slate-200">
 

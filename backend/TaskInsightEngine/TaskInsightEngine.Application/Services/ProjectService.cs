@@ -158,7 +158,7 @@ namespace TaskInsightEngine.Application.Services
 
                 var response = await _projectRepository.GetProjectTasksAsync(request);
 
-                var taskList = response.Select(t => new TaskDetail
+                var taskList = response.OrderByDescending(t=>t.UpdatedAt).Select(t => new TaskDetail
                 {
                     TaskId = t.TaskId,
                     Description = t.Description,

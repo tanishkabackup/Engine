@@ -150,7 +150,7 @@ namespace TaskInsightEngine.Application.Services
             {
                 var taskUpdates = await _taskRepository.GetDailyTaskUpdatesAsync(request);
 
-                var response = taskUpdates.Select(dtu => new DailyTaskUpdateDetail
+                var response = taskUpdates.OrderByDescending(tu=>tu.UpdatedDate).Select(dtu => new DailyTaskUpdateDetail
                 {
                     Status = StatusTypes.MapStatusTypes(dtu.StatusId),
                     EffortHours = dtu.EffortHours,
