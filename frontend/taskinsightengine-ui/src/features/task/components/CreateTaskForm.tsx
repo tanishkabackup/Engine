@@ -1,10 +1,9 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useCreateTask } from "../hooks/useCreateTask";
-import { useGetAllProjects } from "../hooks/useGetAllProjects";
-import { useGetProjectMembers } from "../hooks/useGetProjectMembers";
-import { useTaskAssignment } from "../hooks/useTaskAssignment";
+import { useCreateTask } from "../hooks/useTasks";
+import { useGetProjectMembers ,useGetAllProjects} from "@/features/project/hooks/useProjects";
+import { useTaskAssignment } from "../hooks/useTasks";
 import { CreateTaskRequest, GetProjectMembersRequest,AssignTaskRequest } from "../../../types/request";
 import { Roles } from "../../../types/constants";
 import { useCurrentUser } from "@/features/auth/hooks/useAuth";

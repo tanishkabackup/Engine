@@ -4,5 +4,6 @@
     {
         public const string Section = "SignalR";
         public string ImpedimentHub { get; set; }
+        public string RiskHub { get; set; }
     }
 }

@@ -2,6 +2,6 @@
 {
     public class GetAllUsersResponse
     {
-        public List<UserDetail> Users { get; set; }
+        public List<UserDetail> Users { get; set; } = [];
     }
 }

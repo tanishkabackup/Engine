@@ -4,10 +4,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 using TaskInsightEngine.Application.Dtos.Auth;
+using TaskInsightEngine.Application.Dtos.Risk;
 using TaskInsightEngine.Application.Interfaces.Cache;
 using TaskInsightEngine.Application.Interfaces.Repositories;
 using TaskInsightEngine.Application.Interfaces.Services;
 using TaskInsightEngine.Infrastructure.Caching;
+using TaskInsightEngine.Infrastructure.Jobs;
 using TaskInsightEngine.Infrastructure.Persistence;
 using TaskInsightEngine.Infrastructure.Persistence.Configurations;
 using TaskInsightEngine.Infrastructure.Repositories;
@@ -39,10 +41,12 @@ namespace TaskInsightEngine.Infrastructure
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICacheService, RedisService>();
             services.AddScoped<IRiskRepository, RiskRepository>();
+            services.AddScoped<IJobScheduler,HangfireJobScheduler>();
             services.Configure<AuthCookieSettings>(configuration.GetSection(AuthCookieSettings.Section));
             services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.Section));
             services.Configure<RedisSettings>(configuration.GetSection(RedisSettings.Section));
-            
+            services.Configure<RiskEngineSettings>(configuration.GetSection(RiskEngineSettings.Section));
+            services.HangfireInfrastructure(configuration);
             return services;
         }
     }

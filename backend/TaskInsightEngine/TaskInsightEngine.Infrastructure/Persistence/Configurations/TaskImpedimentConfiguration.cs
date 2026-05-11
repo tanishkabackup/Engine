@@ -8,7 +8,7 @@ namespace TaskInsightEngine.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<TaskImpediment> builder)
         {
-            builder.ToTable("taskimpediment");
+            builder.ToTable("taskimpediments");
 
             builder.HasKey(ti => ti.TaskImpedimentId);
 

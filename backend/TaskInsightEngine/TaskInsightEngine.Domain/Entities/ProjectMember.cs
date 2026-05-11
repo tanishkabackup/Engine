@@ -8,8 +8,7 @@
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public User User { get; set; }
-        public ICollection<DailyTaskUpdateStatus> DailyTaskUpdateStatus { get; set; }
-
-        public ICollection<TaskImpedimentComment> TaskImpedimentComments { get; set; }
+        public ICollection<DailyTaskUpdateStatus> DailyTaskUpdateStatus { get; set; } = [];
+        public ICollection<TaskImpedimentComment> TaskImpedimentComments { get; set; } = [];
     }
 }

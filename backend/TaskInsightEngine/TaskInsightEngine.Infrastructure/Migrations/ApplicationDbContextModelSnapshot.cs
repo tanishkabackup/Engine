@@ -37,6 +37,39 @@ namespace TaskInsightEngine.Infrastructure.Migrations
                     b.ToTable("TaskAssignmentTaskImpediment");
                 });
 
+            modelBuilder.Entity("TaskInsightEngine.Domain.Entities.BriefingEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AttentionCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("RecoveringCount")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SilentCount")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttentionCount");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("RecoveringCount");
+
+                    b.HasIndex("SilentCount");
+
+                    b.ToTable("briefings", (string)null);
+                });
+
             modelBuilder.Entity("TaskInsightEngine.Domain.Entities.DailyTaskUpdateStatus", b =>
                 {
                     b.Property<int>("DailyTaskUpdateStatusId")
@@ -82,7 +115,7 @@ namespace TaskInsightEngine.Infrastructure.Migrations
 
                     b.HasIndex("TaskId");
 
-                    b.ToTable("dailyTaskUpdateStatus", (string)null);
+                    b.ToTable("dailytaskupdatestatus", (string)null);
                 });
 
             modelBuilder.Entity("TaskInsightEngine.Domain.Entities.Priority", b =>
@@ -256,7 +289,7 @@ namespace TaskInsightEngine.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TaskInsightEngine.Domain.Entities.RiskFactor", b =>
+            modelBuilder.Entity("TaskInsightEngine.Domain.Entities.RiskSnapshot", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -264,19 +297,80 @@ namespace TaskInsightEngine.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BaseWeight")
+                    b.Property<int>("AssigneeId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Code")
+                    b.Property<string>("CurrentLevel")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsPerDay")
-                        .HasColumnType("boolean");
+                    b.Property<int?>("CurrentScore")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("Delta")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MovementId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("PrevLevel")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("PrevScore")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TaskId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TopReasons")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("RiskFactor");
+                    b.HasIndex("TaskId", "Date", "Id")
+                        .IsDescending(false, true, true)
+                        .HasDatabaseName("IX_RiskSnapshot_TaskId_Date_Id");
+
+                    b.ToTable("risksnapshots", (string)null);
+                });
+
+            modelBuilder.Entity("TaskInsightEngine.Domain.Entities.RiskSubscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserEmail")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserEmail");
+
+                    b.HasIndex("UserEmail", "ProjectId")
+                        .IsUnique();
+
+                    b.ToTable("risksubscriptions", (string)null);
                 });
 
             modelBuilder.Entity("TaskInsightEngine.Domain.Entities.Role", b =>
@@ -391,7 +485,7 @@ namespace TaskInsightEngine.Infrastructure.Migrations
 
                     b.HasIndex("TaskItemId");
 
-                    b.ToTable("taskAssignment", (string)null);
+                    b.ToTable("taskassignments", (string)null);
                 });
 
             modelBuilder.Entity("TaskInsightEngine.Domain.Entities.TaskImpediment", b =>
@@ -440,7 +534,7 @@ namespace TaskInsightEngine.Infrastructure.Migrations
 
                     b.HasIndex("TaskItemId");
 
-                    b.ToTable("taskimpediment", (string)null);
+                    b.ToTable("taskimpediments", (string)null);
                 });
 
             modelBuilder.Entity("TaskInsightEngine.Domain.Entities.TaskImpedimentComment", b =>
@@ -472,7 +566,7 @@ namespace TaskInsightEngine.Infrastructure.Migrations
 
                     b.HasIndex("TaskImpedimentId");
 
-                    b.ToTable("taskimpedimentcomment", (string)null);
+                    b.ToTable("taskimpedimentcomments", (string)null);
                 });
 
             modelBuilder.Entity("TaskInsightEngine.Domain.Entities.TaskItem", b =>
@@ -523,7 +617,7 @@ namespace TaskInsightEngine.Infrastructure.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("taskItem", (string)null);
+                    b.ToTable("taskItems", (string)null);
                 });
 
             modelBuilder.Entity("TaskInsightEngine.Domain.Entities.User", b =>
@@ -581,6 +675,167 @@ namespace TaskInsightEngine.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TaskInsightEngine.Domain.Entities.BriefingEntry", b =>
+                {
+                    b.OwnsOne("TaskInsightEngine.Domain.Entities.BriefingSnapshot", "BriefingSnapshot", b1 =>
+                        {
+                            b1.Property<int>("BriefingEntryId")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("BriefingEntryId");
+
+                            b1.ToTable("briefings");
+
+                            b1
+                                .ToJson("BriefingSnapshot")
+                                .HasColumnType("jsonb");
+
+                            b1.WithOwner()
+                                .HasForeignKey("BriefingEntryId");
+
+                            b1.OwnsMany("TaskInsightEngine.Domain.Entities.BriefingItem", "NeedsAttention", b2 =>
+                                {
+                                    b2.Property<int>("BriefingSnapshotBriefingEntryId")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<int>("__synthesizedOrdinal")
+                                        .ValueGeneratedOnAdd()
+                                        .HasColumnType("integer");
+
+                                    b2.Property<int>("AssigneeId")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<int?>("Delta")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<string>("Level")
+                                        .HasColumnType("text");
+
+                                    b2.Property<string>("Movement")
+                                        .HasColumnType("text");
+
+                                    b2.Property<int>("ProjectId")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<int?>("Score")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<int>("TaskId")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<string>("Title")
+                                        .HasColumnType("text");
+
+                                    b2.Property<string>("TopReasons")
+                                        .HasColumnType("text");
+
+                                    b2.HasKey("BriefingSnapshotBriefingEntryId", "__synthesizedOrdinal");
+
+                                    b2.ToTable("briefings");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("BriefingSnapshotBriefingEntryId");
+                                });
+
+                            b1.OwnsMany("TaskInsightEngine.Domain.Entities.BriefingItem", "Recovering", b2 =>
+                                {
+                                    b2.Property<int>("BriefingSnapshotBriefingEntryId")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<int>("__synthesizedOrdinal")
+                                        .ValueGeneratedOnAdd()
+                                        .HasColumnType("integer");
+
+                                    b2.Property<int>("AssigneeId")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<int?>("Delta")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<string>("Level")
+                                        .HasColumnType("text");
+
+                                    b2.Property<string>("Movement")
+                                        .HasColumnType("text");
+
+                                    b2.Property<int>("ProjectId")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<int?>("Score")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<int>("TaskId")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<string>("Title")
+                                        .HasColumnType("text");
+
+                                    b2.Property<string>("TopReasons")
+                                        .HasColumnType("text");
+
+                                    b2.HasKey("BriefingSnapshotBriefingEntryId", "__synthesizedOrdinal");
+
+                                    b2.ToTable("briefings");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("BriefingSnapshotBriefingEntryId");
+                                });
+
+                            b1.OwnsMany("TaskInsightEngine.Domain.Entities.BriefingItem", "SlientRisk", b2 =>
+                                {
+                                    b2.Property<int>("BriefingSnapshotBriefingEntryId")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<int>("__synthesizedOrdinal")
+                                        .ValueGeneratedOnAdd()
+                                        .HasColumnType("integer");
+
+                                    b2.Property<int>("AssigneeId")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<int?>("Delta")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<string>("Level")
+                                        .HasColumnType("text");
+
+                                    b2.Property<string>("Movement")
+                                        .HasColumnType("text");
+
+                                    b2.Property<int>("ProjectId")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<int?>("Score")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<int>("TaskId")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<string>("Title")
+                                        .HasColumnType("text");
+
+                                    b2.Property<string>("TopReasons")
+                                        .HasColumnType("text");
+
+                                    b2.HasKey("BriefingSnapshotBriefingEntryId", "__synthesizedOrdinal");
+
+                                    b2.ToTable("briefings");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("BriefingSnapshotBriefingEntryId");
+                                });
+
+                            b1.Navigation("NeedsAttention");
+
+                            b1.Navigation("Recovering");
+
+                            b1.Navigation("SlientRisk");
+                        });
+
+                    b.Navigation("BriefingSnapshot")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("TaskInsightEngine.Domain.Entities.DailyTaskUpdateStatus", b =>
                 {
                     b.HasOne("TaskInsightEngine.Domain.Entities.ProjectMember", "ProjectMember")
@@ -630,6 +885,17 @@ namespace TaskInsightEngine.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TaskInsightEngine.Domain.Entities.RiskSnapshot", b =>
+                {
+                    b.HasOne("TaskInsightEngine.Domain.Entities.TaskItem", "TaskItem")
+                        .WithMany("RiskSnapshots")
+                        .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TaskItem");
                 });
 
             modelBuilder.Entity("TaskInsightEngine.Domain.Entities.TaskAssignment", b =>
@@ -751,6 +1017,8 @@ namespace TaskInsightEngine.Infrastructure.Migrations
             modelBuilder.Entity("TaskInsightEngine.Domain.Entities.TaskItem", b =>
                 {
                     b.Navigation("DailyTaskUpdateStatuses");
+
+                    b.Navigation("RiskSnapshots");
 
                     b.Navigation("TaskAssignment");
 

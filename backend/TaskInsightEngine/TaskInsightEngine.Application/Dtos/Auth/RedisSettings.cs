@@ -3,7 +3,7 @@
     public class RedisSettings
     {
         public const string Section = "Redis";
-        public string ConnectionStrings { get; set; }
-        public int ExpiryTime { get; set; }
+        public string ConnectionStrings { get; set; } 
+        public int ExpiryTime { get; set; } 
     }
 }

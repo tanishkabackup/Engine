@@ -64,7 +64,6 @@ namespace TaskInsightEngine.Infrastructure.Repositories
             {
 
                 var userList = await _context.Users
-                              .Include(u => u.Role)
                               .Select(u => new UserDetail
                               {
                                 UserId = u.UserId,

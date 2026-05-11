@@ -11,7 +11,7 @@ namespace TaskInsightEngine.Domain.Enums
         public const string InReview = "InReview";
         public const string Blocked = "Blocked";
 
-        public static int MapStatus(string status)
+        public static int MapStatus(string? status)
         {
             return status switch
             {
@@ -36,7 +36,7 @@ namespace TaskInsightEngine.Domain.Enums
                4=> OnHold,
                5=> InReview,
                6=> Blocked,
-                _=>"none"
+                _=>"Unknown"
             };
         }
 

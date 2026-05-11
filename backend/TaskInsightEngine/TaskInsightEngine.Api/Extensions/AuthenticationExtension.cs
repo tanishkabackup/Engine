@@ -9,10 +9,10 @@ namespace TaskInsightEngine.Api.Extensions
     {
         public static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration config)
         {
-            var jwt = config.GetSection(JwtSettings.Section).Get<JwtSettings>();
-            var authCookie = config.GetSection(AuthCookieSettings.Section).Get<AuthCookieSettings>();
+            var jwt = config.GetSection(JwtSettings.Section).Get<JwtSettings>()!;
+            var authCookie = config.GetSection(AuthCookieSettings.Section).Get<AuthCookieSettings>()!;
 
-            if (jwt == null)
+            if (jwt is null)
             {
                 throw new Exception("JWT configuration is missing");
             }

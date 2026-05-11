@@ -7,9 +7,9 @@
         public int RiskId { get; set; }
         public string Title { get; set; }
         public DateTime CreatedAt { get; set; }
-        public int CreatedBy { get; set; }
+        public int? CreatedBy { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public int ResolvedBy { get; set; }
+        public int? ResolvedBy { get; set; }
         public DateTime? ResolvedAt { get; set; }
         public bool IsResolved { get; set; }
         public TaskItem TaskItem { get; set; }

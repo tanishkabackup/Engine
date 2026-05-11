@@ -1,5 +1,8 @@
-﻿using TaskInsightEngine.Application;
-using TaskInsightEngine.Application.Dtos.Auth;
+﻿using FluentValidation;
+using TaskInsightEngine.Api.Services;
+using TaskInsightEngine.Application;
+using TaskInsightEngine.Application.Dtos.Risk;
+using TaskInsightEngine.Application.Interfaces.Services;
 using TaskInsightEngine.Infrastructure;
 
 namespace TaskInsightEngine.Api
@@ -8,6 +11,8 @@ namespace TaskInsightEngine.Api
     {
         public static IServiceCollection AddPresentationDI(this IServiceCollection services,IConfiguration configuration)
         {
+            services.AddScoped<IRiskNotificationService, RiskNotificationService>();
+            services.AddValidatorsFromAssembly(typeof(ScheduleRiskDeliveryRequest).Assembly);
             services.AddInfrastructureDI(configuration);
             services.AddApplicationDI();
             return services;

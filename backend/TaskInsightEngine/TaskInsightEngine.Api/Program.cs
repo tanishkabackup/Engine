@@ -11,8 +11,8 @@ namespace TaskInsightEngine.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var logSettings = builder.Configuration.GetSection(LogSettings.Section).Get<LogSettings>();
-            var signalRsettings = builder.Configuration.GetSection(HubSettings.Section).Get<HubSettings>();
+            var logSettings = builder.Configuration.GetSection(LogSettings.Section).Get<LogSettings>()!;
+            var signalRsettings = builder.Configuration.GetSection(HubSettings.Section).Get<HubSettings>()!;
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
                 .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {level:u3} {Message:lj} {NewLine} {Exception}]")
@@ -66,9 +66,10 @@ namespace TaskInsightEngine.Api
             app.UseAuthentication();
             app.UseAuthorization();
 
-
+            app.UseHangFireDashboard();
             app.MapControllers();
             app.MapHub<ImpedimentHub>(signalRsettings.ImpedimentHub);
+            app.MapHub<RiskHub>(signalRsettings.RiskHub);
 
             app.Run();
         }

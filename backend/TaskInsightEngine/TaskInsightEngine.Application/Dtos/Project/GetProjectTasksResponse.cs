@@ -4,7 +4,7 @@ namespace TaskInsightEngine.Application.Dtos.Project
 {
     public class GetProjectTasksResponse
     {
-       public List<TaskDetail> TaskList { get; set; }
+        public List<TaskDetail> TaskList { get; set; } = [];
 
        
     }

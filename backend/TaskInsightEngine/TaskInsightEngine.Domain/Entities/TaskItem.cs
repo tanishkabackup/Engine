@@ -13,9 +13,10 @@
         public DateTime UpdatedAt { get; set; }
         public string? RiskLevel { get; set; }
         public int? RiskScore { get; set; }
-        public ICollection<DailyTaskUpdateStatus> DailyTaskUpdateStatuses { get; set; }
-        public ICollection<TaskAssignment> TaskAssignment { get; set; }
-        public ICollection<TaskImpediment> TaskImpediments { get; set; }
-        
+        public ICollection<DailyTaskUpdateStatus> DailyTaskUpdateStatuses { get; set; } = [];
+        public ICollection<TaskAssignment> TaskAssignment { get; set; } = [];
+        public ICollection<TaskImpediment> TaskImpediments { get; set; } = [];
+        public ICollection<RiskSnapshot> RiskSnapshots { get; set; } = [];
+
     }
 }

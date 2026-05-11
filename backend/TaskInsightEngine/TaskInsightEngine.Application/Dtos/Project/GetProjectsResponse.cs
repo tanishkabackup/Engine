@@ -2,6 +2,6 @@
 {
     public class GetProjectsResponse
     {
-       public List<ProjectDetail> Projects { get; set; }
+        public List<ProjectDetail> Projects { get; set; } = [];
     }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetProjectsTasks } from "../hooks/useaddProjectMembers";
+import { useGetProjectsTasks } from "../hooks/useProjects";
 import { GetProjectTasksRequest } from "../../../types/request";
 import { useState } from "react";
 import UpdateTaskForm from "./UpdateTaskForm";

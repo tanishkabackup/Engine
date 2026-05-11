@@ -115,3 +115,10 @@ export interface GetTaskImpedimentCommentsRequest
 {
    taskImpedimentId : number;
 }
+
+export interface CreateRiskSubscriptionRequest{
+   hours: number;
+   minutes: number;
+   projectIds: number[];
+   email: string;
+}

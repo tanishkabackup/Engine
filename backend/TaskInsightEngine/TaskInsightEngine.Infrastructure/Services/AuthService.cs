@@ -29,7 +29,7 @@ namespace TaskInsightEngine.Infrastructure.Services
             };
             response.Cookies.Delete(_options.AccessCookieName, new CookieOptions { Path = "/" });
             response.Cookies.Delete(_options.RefreshCookieName, new CookieOptions { Path = _options.RefreshPath });
-            //response.Cookies.Delete("is-logged-in", deleteOptions);
+           
         }
 
         public string? GetRefreshToken()

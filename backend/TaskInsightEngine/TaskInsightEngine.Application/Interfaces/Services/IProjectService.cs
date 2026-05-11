@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using TaskInsightEngine.Application.Dtos.Project;
-using TaskInsightEngine.Application.Dtos.Task;
+﻿using TaskInsightEngine.Application.Dtos.Project;
 
 namespace TaskInsightEngine.Application.Interfaces.Services
 {

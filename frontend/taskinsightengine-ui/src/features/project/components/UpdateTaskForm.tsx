@@ -1,7 +1,7 @@
 import { TaskDetail } from "@/types/response";
 import { DailyTaskUpdateRequest } from "@/types/request";
 import { Status } from "@/types/constants";
-import { UseDailyTaskUpdate, useGetDailyTaskUpdates, useGetImpediments } from "@/features/task/hooks/useCreateTask";
+import { UseDailyTaskUpdate, useGetDailyTaskUpdates, useGetImpediments } from "@/features/task/hooks/useTasks";
 import { useForm } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { TaskActionHeader } from "@/features/task/components/TaskActionHeader";
@@ -74,7 +74,9 @@ export default function UpdateTaskForm({ task, memberId, onBack }: UpdateTaskFor
     console.log("Task Data Received:", task);
     const formattedEta = task.expectedEta ? new Date(task.expectedEta).toISOString().split('T')[0] : "";
 
+
     const currentStatus = taskUpdates?.[0]?.status ?? null;
+    const lastUpdatedDate = taskUpdates?.[0]?.lastUpdatedDate ?? task.updatedAt ?? null;
     return (
         <div className="max-w-5xl mx-auto p-8 bg-white rounded-[2.5rem] shadow-sm border border-slate-200">
 
@@ -90,7 +92,7 @@ export default function UpdateTaskForm({ task, memberId, onBack }: UpdateTaskFor
                         value={currentStatus || STATUS_OPTIONS[0]}
                         disabled
                         className="bg-sky-50 text-sky-700 border-none rounded-full px-4 py-2 font-black text-xs uppercase tracking-wider outline-none cursor-default appearance-none"
-                        >
+                    >
                         {STATUS_OPTIONS.map(s => (
                             <option key={s} value={s}>{s}</option>
                         ))}
@@ -117,12 +119,6 @@ export default function UpdateTaskForm({ task, memberId, onBack }: UpdateTaskFor
                             defaultValue={formattedEta}
                             className="text-sm font-bold text-slate-700 bg-transparent border-none p-0 focus:ring-0 cursor-pointer"
                         />
-                        <p className="text-[10px] font-black text-slate-400 uppercase">Closing Date</p>
-                        <input
-                            type="date"
-                            id="closingDate"
-                            className="text-sm font-bold text-slate-700 bg-transparent border-none p-0 focus:ring-0 cursor-pointer"
-                        />
                     </div>
                     <div className="space-y-1">
                         <p className="text-[10px] font-black text-slate-400 uppercase">Opened Date</p>
@@ -130,7 +126,7 @@ export default function UpdateTaskForm({ task, memberId, onBack }: UpdateTaskFor
                     </div>
                     <div className="space-y-1">
                         <p className="text-[10px] font-black text-slate-400 uppercase">Last Updated</p>
-                        <p className="text-sm font-bold text-slate-700">{new Date(task.updatedAt).toLocaleDateString()}</p>
+                        <p className="text-sm font-bold text-slate-700">{new Date(lastUpdatedDate).toLocaleDateString()}</p>
                     </div>
                 </div>
             </div>

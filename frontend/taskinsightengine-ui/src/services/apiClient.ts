@@ -38,7 +38,7 @@ export async function apiClient<T>(endpoint: string, options: RequestInit = {}):
   
     export const api ={
       post: <T>(endpoint: string, body: any, options?: RequestInit) => 
-    apiClient<T>(endpoint, { 
+      apiClient<T>(endpoint, { 
       ...options, 
       method: 'POST', 
       body: JSON.stringify(body) 

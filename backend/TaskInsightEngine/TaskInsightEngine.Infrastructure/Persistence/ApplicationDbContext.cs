@@ -23,6 +23,9 @@ namespace TaskInsightEngine.Infrastructure.Persistence
         public DbSet<TaskImpediment> TaskImpediments { get; set; }
         public DbSet<TaskImpedimentComment> TaskImpedimentComments { get; set; }
         public DbSet<Risk> Risks { get; set; }
+        public DbSet<BriefingEntry> BriefingEntries { get; set; }
+        public DbSet<RiskSnapshot> RiskSnapshots { get; set; }
+        public DbSet<RiskSubscription> RiskSubscriptions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

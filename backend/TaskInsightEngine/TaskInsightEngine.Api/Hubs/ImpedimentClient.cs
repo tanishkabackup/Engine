@@ -1,4 +1,4 @@
-﻿using TaskInsightEngine.Application.Dtos.TaskImpediment;
+﻿using TaskInsightEngine.Application.Dtos.TaskImpediments;
 
 namespace TaskInsightEngine.Api.Hubs
 {

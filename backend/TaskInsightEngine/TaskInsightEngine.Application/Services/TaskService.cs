@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using System.Net.Cache;
-using TaskInsightEngine.Application.Dtos.Project;
 using TaskInsightEngine.Application.Dtos.Task;
-using TaskInsightEngine.Application.Dtos.TaskImpediment;
+using TaskInsightEngine.Application.Dtos.TaskImpediments;
 using TaskInsightEngine.Application.Dtos.Type;
 using TaskInsightEngine.Application.Interfaces.Repositories;
 using TaskInsightEngine.Application.Interfaces.Services;
@@ -20,7 +18,7 @@ namespace TaskInsightEngine.Application.Services
         private readonly IProjectRepository _projectRepository;
         private readonly ILogger<TaskService> _logger;
 
-        public TaskService(ITaskRepository taskRepository, IPriorityRepository priorityRepository, IRiskRepository riskRepository,IProjectRepository projectRepository ,ILogger<TaskService> logger)
+        public TaskService(ITaskRepository taskRepository, IPriorityRepository priorityRepository, IRiskRepository riskRepository, IProjectRepository projectRepository, ILogger<TaskService> logger)
         {
             _taskRepository = taskRepository;
             _priorityReposistory = priorityRepository;
@@ -150,7 +148,7 @@ namespace TaskInsightEngine.Application.Services
             {
                 var taskUpdates = await _taskRepository.GetDailyTaskUpdatesAsync(request);
 
-                var response = taskUpdates.OrderByDescending(tu=>tu.UpdatedDate).Select(dtu => new DailyTaskUpdateDetail
+                var response = taskUpdates.OrderByDescending(tu => tu.UpdatedDate).Select(dtu => new DailyTaskUpdateDetail
                 {
                     Status = StatusTypes.MapStatusTypes(dtu.StatusId),
                     EffortHours = dtu.EffortHours,
@@ -158,8 +156,8 @@ namespace TaskInsightEngine.Application.Services
                     UpdatedEta = dtu.UpdatedEta,
                     LastUpdatedDate = dtu.UpdatedDate,
                     DailyTaskUpdateStatusId = dtu.DailyTaskUpdateStatusId,
-                    ProjectMemberName = dtu.ProjectMember.User.FullName,
-                    Email = dtu.ProjectMember.User.Email
+                    ProjectMemberName = dtu.ProjectMember?.User?.FullName,
+                    Email = dtu.ProjectMember?.User.Email
 
                 }).ToList();
 
@@ -202,18 +200,18 @@ namespace TaskInsightEngine.Application.Services
                     var resolvedMemberId = GetMemberId(request.ResolvedBy, taskAssignments);
                     resolvedDate = DateTime.UtcNow;
                     taskImpediment.ResolvedAt = resolvedDate;
-                    taskImpediment.ResolvedBy = resolvedMemberId.Value;
+                    taskImpediment.ResolvedBy = resolvedMemberId;
 
                 }
 
                 var createdByMemberId = GetMemberId(request.CreatedBy, taskAssignments);
+                
 
-
-                taskImpediment.Title = request.Title;
+                taskImpediment.Title = request.Title ?? string.Empty; 
                 taskImpediment.IsResolved = request.IsResolved;
                 taskImpediment.TaskItemId = request.TaskId;
                 taskImpediment.RiskId = createRiskDeatils.RiskId;
-                taskImpediment.CreatedBy = createdByMemberId.Value;
+                taskImpediment.CreatedBy = createdByMemberId;
 
 
 
@@ -238,15 +236,15 @@ namespace TaskInsightEngine.Application.Services
         }
 
         // Get projectmemberId from the resolvedby email
-        private static int? GetMemberId(string email, List<TaskAssignment> taskAssignments)
+        private static int? GetMemberId(string? email, List<TaskAssignment> taskAssignments)
         {
             return taskAssignments
                    .SelectMany(ta => new[]
                   {
 
-                    new { Id = (int?)ta.AssigneeId, Email = ta.AssigneeMember?.User?.Email },
-                    new { Id = (int?)ta.AssignerId, Email = ta.AssignerMember?.User?.Email },
-                    new { Id = (int?)ta.ManagerId,  Email = ta.Manager?.User?.Email }
+                    new { Id = (int?)ta.AssigneeId, ta.AssigneeMember?.User?.Email },
+                    new { Id = (int?)ta.AssignerId, ta.AssignerMember?.User?.Email },
+                    new { Id = (int?)ta.ManagerId,  ta.Manager?.User?.Email }
                   })
                   .FirstOrDefault(match => match.Id != null &&
                    string.Equals(match.Email, email, StringComparison.OrdinalIgnoreCase))?.Id;
@@ -285,20 +283,20 @@ namespace TaskInsightEngine.Application.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError("An error ocurred in the { Method}", nameof(AddTaskImpedimentAsync));
+                _logger.LogError(ex,"An error ocurred in the {Method}", nameof(AddTaskImpedimentAsync));
                 throw;
             }
         }
 
-        private static string? GetMemberNames(int projectMemberId, List<TaskAssignment> taskAssignments)
+        private static string? GetMemberNames(int? projectMemberId, List<TaskAssignment> taskAssignments)
         {
             return taskAssignments
                    .SelectMany(ta => new[]
                    {
 
-                    new { Id = (int?)ta.AssigneeId, FullName = ta.AssigneeMember?.User?.FullName },
-                    new { Id = (int?)ta.AssignerId, FullName = ta.AssignerMember?.User?.FullName },
-                    new { Id = (int?)ta.ManagerId,  FullName = ta.Manager?.User?.FullName }
+                    new { Id = (int?)ta.AssigneeId, ta.AssigneeMember?.User?.FullName },
+                    new { Id = (int?)ta.AssignerId, ta.AssignerMember?.User?.FullName },
+                    new { Id = (int?)ta.ManagerId,  ta.Manager?.User?.FullName }
                    })
                   .FirstOrDefault(ta => ta.Id == projectMemberId)?.FullName;
         }
@@ -319,20 +317,20 @@ namespace TaskInsightEngine.Application.Services
 
                 await _taskRepository.AddImpedimentCommentAsync(ImpedimentComment);
 
-                
+
 
                 return new ImpedimentCommentDto
                 {
-                    CommentId = ImpedimentComment.TaskImpedimentCommentId ,
+                    CommentId = ImpedimentComment.TaskImpedimentCommentId,
                     CreatedAt = ImpedimentComment.CreatedAt,
-                    Email = projectMemberId.User.FullName,
+                    Email = projectMemberId.User.Email,
                     FullName = request.UserFullName,
-                    Message = ImpedimentComment.Comment ,
+                    Message = ImpedimentComment.Comment,
                 };
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                _logger.LogError("An error ocurred in the {Method}", nameof(AddImpedimentCommentAsync));
+                _logger.LogError(ex,"An error ocurred in the {Method}", nameof(AddImpedimentCommentAsync));
                 throw;
             }
         }
@@ -346,8 +344,8 @@ namespace TaskInsightEngine.Application.Services
                 var comments = response.Select(comment => new ImpedimentCommentDto
                 {
                     CommentId = comment.TaskImpedimentCommentId,
-                    FullName = comment.Member.User.FullName,
-                    Email = comment.Member.User.Email,
+                    FullName = comment.Member?.User.FullName,
+                    Email = comment.Member?.User.Email,
                     Message = comment.Comment,
                     CreatedAt = comment.CreatedAt
 

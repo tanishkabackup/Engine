@@ -1,5 +1,4 @@
-﻿using TaskInsightEngine.Application.Dtos.Auth;
-using TaskInsightEngine.Application.Dtos.Response;
+﻿using TaskInsightEngine.Application.Dtos.Response;
 using TaskInsightEngine.Domain.Entities;
 
 namespace TaskInsightEngine.Application.Interfaces.Services
@@ -9,6 +8,6 @@ namespace TaskInsightEngine.Application.Interfaces.Services
         Task<TokenResponse> GenerateToken(User user);
         Task<TokenResponse> SaveSessionAsync(User user);
         string GenerateRefreshToken(string token);
-        string GetSessionId(string? token);
+        string? GetSessionId(string? token);
     }
 }

@@ -15,13 +15,11 @@ namespace TaskInsightEngine.Application.Services
     {
         private readonly IProjectRepository _projectRepository;
         private readonly IPriorityRepository _priorityRepository;
-        private readonly IUserRepository _userRepository;
         private readonly ILogger<ProjectService> _logger;
-        public ProjectService(IProjectRepository projectRepository, IPriorityRepository priorityRepository, IUserRepository userRepository, ILogger<ProjectService> logger)
+        public ProjectService(IProjectRepository projectRepository, IPriorityRepository priorityRepository, ILogger<ProjectService> logger)
         {
             _projectRepository = projectRepository;
             _priorityRepository = priorityRepository;
-            _userRepository = userRepository;
             _logger = logger;
         }
 

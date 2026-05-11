@@ -2,6 +2,6 @@
 {
     public class AssignTaskRequest
     {
-       public List<AssignTaskDetail> TaskAssignments { get; set; }
+        public List<AssignTaskDetail> TaskAssignments { get; set; } = [];
     }
 }

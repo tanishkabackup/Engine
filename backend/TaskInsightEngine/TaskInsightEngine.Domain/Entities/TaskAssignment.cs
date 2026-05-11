@@ -21,6 +21,6 @@
         public ProjectMember AssignerMember { get; set; }
         public ProjectMember Manager { get; set; }
 
-       public ICollection<TaskImpediment> TaskImpediments { get; set; }
+        public ICollection<TaskImpediment> TaskImpediments { get; set; }
     }
 }

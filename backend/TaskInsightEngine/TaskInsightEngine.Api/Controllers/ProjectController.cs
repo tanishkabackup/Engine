@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskInsightEngine.Application.Dtos.Project;
+using TaskInsightEngine.Application.Dtos.Risk;
 using TaskInsightEngine.Application.Interfaces.Services;
 
 namespace TaskInsightEngine.Api.Controllers
@@ -10,9 +12,11 @@ namespace TaskInsightEngine.Api.Controllers
     public class ProjectController : ControllerBase
     {
         private readonly IProjectService _projectService;
-        public ProjectController(IProjectService projectService)
+        private readonly IRiskService _riskService;
+        public ProjectController(IProjectService projectService, IRiskService riskService)
         {
             _projectService = projectService;
+            _riskService = riskService;
         }
 
         [ApiExplorerSettings(GroupName = "v1")]
@@ -63,6 +67,35 @@ namespace TaskInsightEngine.Api.Controllers
         {
             var response = await _projectService.GetProjectTasksAsync(request);
             return Ok(response);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ApiExplorerSettings(GroupName = "v1")]
+        [ProducesResponseType(typeof(CreateRiskSubscriptionResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails),StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Route("CreateRiskSubscription")]
+        public async Task<IActionResult> CreateRiskSubscription([FromBody] CreateRiskSubscriptionRequest request,
+        [FromServices] IValidator<CreateRiskSubscriptionRequest> validator)
+        {
+            var validationResult = await validator.ValidateAsync(request);
+
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.ToDictionary();
+                return ValidationProblem(new ValidationProblemDetails(errors));
+            }
+
+            try
+            {
+                var response = await _riskService.CreateRiskSubcriptionAsync(request);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while scheduling.");
+            }
         }
 
     }

@@ -9,7 +9,7 @@
         public string Password { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public Role Role { get; set; }
-        public ICollection<ProjectMember> Members { get; set; }
+        public Role? Role { get; set; }
+        public ICollection<ProjectMember> Members { get; set; } = [];
     }
 }

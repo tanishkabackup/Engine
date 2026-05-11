@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
-using TaskInsightEngine.Application.Dtos.TaskImpediment;
+using TaskInsightEngine.Application.Dtos.TaskImpediments;
 using TaskInsightEngine.Application.Interfaces.Services;
 using TaskInsightEngine.Domain.Constants;
 

@@ -98,7 +98,6 @@ postgres-data/
 pgdata/
 
 # backups / dumps
-*.sql
 *.dump
 
 # =========================

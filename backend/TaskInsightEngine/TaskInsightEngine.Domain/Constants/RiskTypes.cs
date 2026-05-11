@@ -6,8 +6,9 @@
         public const string Medium = "Medium";
         public const string High = "High";
         public const string Critical = "Critical";
+        
 
-        public static int MapRiskWeights(string status)
+        public static int MapRiskWeights(string? status)
         => status switch
         {
             Low => 1,
@@ -18,13 +19,14 @@
         };
 
         public static string MapRiskStatus(int weight)
-       => weight switch
-       {
-           1 => Low,
-           2 => Medium,
-           3 => High,
-           4 => Critical,
-           0 => ""
-       };
+        => weight switch
+        {
+            1 => Low,
+            2 => Medium,
+            3 => High,
+            4 => Critical,
+            0 => "Unknown",
+            
+        };
     }
 }

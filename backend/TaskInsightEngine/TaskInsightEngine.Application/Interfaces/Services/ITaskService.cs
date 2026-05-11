@@ -1,5 +1,5 @@
 ﻿using TaskInsightEngine.Application.Dtos.Task;
-using TaskInsightEngine.Application.Dtos.TaskImpediment;
+using TaskInsightEngine.Application.Dtos.TaskImpediments;
 
 namespace TaskInsightEngine.Application.Interfaces.Services
 {

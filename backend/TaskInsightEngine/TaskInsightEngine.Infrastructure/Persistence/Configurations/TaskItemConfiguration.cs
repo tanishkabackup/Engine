@@ -9,7 +9,7 @@ namespace TaskInsightEngine.Infrastructure.Persistence.Configurations
     {
         public void Configure (EntityTypeBuilder<TaskItem>builder)
         {
-            builder.ToTable("taskItem");
+            builder.ToTable("taskItems");
             builder.HasKey(t => t.TaskItemId);
 
             builder.HasOne<Priority>()

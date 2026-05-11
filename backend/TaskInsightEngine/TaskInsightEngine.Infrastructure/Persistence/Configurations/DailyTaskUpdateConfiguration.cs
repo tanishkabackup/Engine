@@ -8,7 +8,7 @@ namespace TaskInsightEngine.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<DailyTaskUpdateStatus> builder)
         {
-            builder.ToTable("dailyTaskUpdateStatus");
+            builder.ToTable("dailytaskupdatestatus");
 
             builder.HasKey(dt => dt.DailyTaskUpdateStatusId);
 

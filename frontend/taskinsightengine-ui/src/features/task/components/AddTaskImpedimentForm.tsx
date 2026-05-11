@@ -2,7 +2,7 @@
 
 import { useCurrentUser } from "@/features/auth/hooks/useAuth";
 import { useForm } from "react-hook-form";
-import { useAddTaskImpediment } from "../hooks/useCreateTask";
+import { useAddTaskImpediment } from "../hooks/useTasks";
 import { AddTaskImpedimentRequest } from "@/types/request";
 import { Risk } from "@/types/constants";
 import { useQueryClient } from "@tanstack/react-query";

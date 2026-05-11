@@ -8,7 +8,7 @@ namespace TaskInsightEngine.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<TaskAssignment> builder)
         {
-            builder.ToTable("taskAssignment");
+            builder.ToTable("taskassignments");
 
             builder.HasKey(ts => ts.TaskAssignmentId);
 

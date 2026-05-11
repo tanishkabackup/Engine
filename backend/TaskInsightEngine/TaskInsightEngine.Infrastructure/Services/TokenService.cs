@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -33,7 +32,7 @@ namespace TaskInsightEngine.Infrastructure.Services
             _auth = auth;
         }
 
-        public string GenerateRefreshToken(string token)
+        public string GenerateRefreshToken(string? token)
         {
             var randomNumber = new byte[32];
             using var rng = RandomNumberGenerator.Create();
@@ -74,7 +73,7 @@ namespace TaskInsightEngine.Infrastructure.Services
 
         }
 
-        public string GetSessionId(string? token)
+        public string? GetSessionId(string token)
         {
             var dotIndex = token.IndexOf('.');
             if (dotIndex <= 0) return null;

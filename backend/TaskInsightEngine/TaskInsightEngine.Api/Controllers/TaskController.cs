@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskInsightEngine.Application.Dtos.Task;
-using TaskInsightEngine.Application.Dtos.TaskImpediment;
+using TaskInsightEngine.Application.Dtos.TaskImpediments;
 using TaskInsightEngine.Application.Interfaces.Services;
 
 namespace TaskInsightEngine.Api.Controllers

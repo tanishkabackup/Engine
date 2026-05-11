@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { useSignalR } from "@/features/task/hooks/useSignalR"
 import { GetTaskImpedimentCommentsRequest } from "@/types/request";
-import { useGetTaskImpedimentComments } from "../hooks/useCreateTask";
+import { useGetTaskImpedimentComments } from "../hooks/useTasks";
 
 type FormData = {
     comment: string;

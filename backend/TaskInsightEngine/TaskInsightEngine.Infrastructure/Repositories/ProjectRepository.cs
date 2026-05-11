@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Pipelines.Sockets.Unofficial.Arenas;
-using System.ComponentModel;
 using TaskInsightEngine.Application.Dtos.Project;
 using TaskInsightEngine.Application.Dtos.Task;
 using TaskInsightEngine.Application.Interfaces.Repositories;
@@ -138,9 +137,9 @@ namespace TaskInsightEngine.Infrastructure.Repositories
                     UpdatedAt = t.UpdatedAt,
                     ExpectedEta = t.ExpectedETA,
                     ProjectId = t.ProjectId,
-                    Assignees = t.TaskAssignment.Select(a => a.AssigneeMember.User.FullName).ToList(),
-                    Assigners = t.TaskAssignment.Select(a=>a.AssignerMember.User.FullName).ToList(),
-                    Managers = t.TaskAssignment.Select(a=>a.Manager.User.FullName).ToList(),
+                    Assignees = [.. t.TaskAssignment.Select(a => a.AssigneeMember.User.FullName)],
+                    Assigners = [.. t.TaskAssignment.Select(a=>a.AssignerMember.User.FullName)],
+                    Managers = [.. t.TaskAssignment.Select(a=>a.Manager.User.FullName)],
 
 
                 }).ToList();
@@ -155,13 +154,13 @@ namespace TaskInsightEngine.Infrastructure.Repositories
             }
         }
 
-        public async Task<ProjectMember?> GetProjectMemberByEmailAsync(string userEmail)
+        public async Task<ProjectMember> GetProjectMemberByEmailAsync(string userEmail)
         {
             return await _context.ProjectMembers
                 .Include(pm => pm.User)
                 .ThenInclude(u => u.Role)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.User.Email == userEmail);
+                .FirstAsync(u => u.User.Email == userEmail);
         }
     }
 }

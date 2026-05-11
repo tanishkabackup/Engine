@@ -167,7 +167,7 @@ namespace TaskInsightEngine.Application.Services
 
                 // security check: check if the provided refresh token is valid and can be retrived from redis
                 var cachedSessionDetails = await _cacheService.GetAsync<UserSession>(refreshCacheKey);
-                if (cachedSessionDetails.RefreshToken != request.RefreshToken)
+                if (cachedSessionDetails?.RefreshToken != request.RefreshToken)
                 {
                     _logger.LogError("Invalid token");
                     await _cacheService.RemoveAsync(refreshCacheKey);

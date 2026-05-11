@@ -2,6 +2,6 @@
 {
     public class GetProjectsRequest
     {
-        public List<int> ProjectIds { get; set; }
+        public List<int> ProjectIds { get; set; } = [];
     }
 }

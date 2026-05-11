@@ -13,7 +13,7 @@ namespace TaskInsightEngine.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<TaskImpedimentComment> builder)
         {
-            builder.ToTable("taskimpedimentcomment");
+            builder.ToTable("taskimpedimentcomments");
 
             builder.HasKey(t=>t.TaskImpedimentCommentId);
 
