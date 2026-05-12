@@ -5,6 +5,7 @@ namespace TaskInsightEngine.Application.Dtos.Risk
     public class NotifyRiskDetailsRequest
     {
        public string Email { get; set; }
-        public BriefingSnapshot? BriefingDetails { get; set; } 
+       public string ProjectName { get; set; }
+       public BriefingSnapshot? BriefingDetails { get; set; } 
     }
 }

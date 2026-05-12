@@ -12,5 +12,6 @@ namespace TaskInsightEngine.Application.Interfaces.Repositories
         Task<GetProjectsResponse> GetProjectDetailsAsync(GetProjectsRequest project);
         Task<List<ProjectMember>> GetProjectMembersAsync(GetProjectMembersRequest request);
         Task<List<TaskDetailDto>> GetProjectTasksAsync(GetProjectTasksRequest request);
+        Task<List<GetProjectResponse>> GetProjectsAsync(List<int> projectIds);
     }
 }

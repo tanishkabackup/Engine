@@ -5,6 +5,8 @@ import React from "react";
 import '@/app/globals.css'
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { Toaster } from "sonner";
+import RiskNotificationListener from "@/features/notification/RiskNotificationListener";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -20,6 +22,8 @@ export default function RootLayout({
     <html className={cn("font-sans", geist.variable)}>
       <body>
         <QueryClientProvider client={queryClient}>
+          <Toaster/>
+           <RiskNotificationListener/>
           {children}
         </QueryClientProvider>
       </body>

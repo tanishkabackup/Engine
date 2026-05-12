@@ -122,3 +122,21 @@ export interface CreateRiskSubscriptionRequest{
    projectIds: number[];
    email: string;
 }
+
+export interface BriefingItem {
+  taskId: number;
+  title: string ;
+  level: string ;
+  score: number ;
+  delta: number ;
+  movement: string ;
+  topReasons: string ;
+  assigneeId: number;
+  projectId: number;
+}
+
+export interface BriefingSnapshot {
+  needsAttention: BriefingItem[];
+  slientRisk: BriefingItem[]; 
+  recovering: BriefingItem[];
+}

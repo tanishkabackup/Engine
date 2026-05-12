@@ -162,5 +162,24 @@ namespace TaskInsightEngine.Infrastructure.Repositories
                 .AsNoTracking()
                 .FirstAsync(u => u.User.Email == userEmail);
         }
+
+        public async Task<List<GetProjectResponse>> GetProjectsAsync(List<int> projectIds)
+        {
+            _logger.LogInformation("Database operations for {Method} started ", nameof(GetProjectTasksAsync));
+            try
+            {
+                return await _context.Projects.Where(x => projectIds.Contains(x.ProjectId)).Select(x => new GetProjectResponse
+                {
+                    Id = x.ProjectId,
+                    Name = x.Name
+                })
+               .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Database error for {Method}", nameof(GetProjectTasksAsync));
+                throw;
+            }
+        }
     }
 }

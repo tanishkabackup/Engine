@@ -13,14 +13,16 @@ namespace TaskInsightEngine.Infrastructure.Jobs
     {
         private readonly IRiskService _riskService;
         private readonly IRiskRepository _riskRepository;
+        private readonly IProjectRepository _projectRepository;
         private readonly RiskEngineSettings _riskEngineSettings;
         private readonly IRiskNotificationService _notificationService;
         private readonly ILogger<DailyRiskJob> _logger;
 
-        public DailyRiskJob( IRiskService riskService,IRiskRepository riskRepository,IRiskNotificationService notificationService,IOptions<RiskEngineSettings> riskSettings,ILogger<DailyRiskJob> logger)
+        public DailyRiskJob( IRiskService riskService,IRiskRepository riskRepository, IProjectRepository projectRepository,IRiskNotificationService notificationService,IOptions<RiskEngineSettings> riskSettings,ILogger<DailyRiskJob> logger)
         {
             _riskService = riskService;
             _riskRepository = riskRepository;
+            _projectRepository = projectRepository;
             _notificationService = notificationService;
             _riskEngineSettings = riskSettings.Value;
             _logger = logger;
@@ -96,7 +98,7 @@ namespace TaskInsightEngine.Infrastructure.Jobs
 
                         string movement = DetermineMovement(result, baseline, delta);
 
-                    
+
                         _logger.LogInformation("Task {TaskId}: Score {Score}, Delta {Delta}, Movement {Movement}",
                             task.Id, currentScore, delta, movement);
 
@@ -176,8 +178,13 @@ namespace TaskInsightEngine.Infrastructure.Jobs
         {
             var groupedByProject = snapshots.GroupBy(x => x.ProjectId);
 
+            var projectIds = groupedByProject.Select(x => x.Key).ToList();
+
+            var projects = await _projectRepository.GetProjectsAsync(projectIds);
+
             foreach (var project in groupedByProject)
             {
+                var projectInfo = projects.FirstOrDefault(x => x.Id == project.Key);
                 var briefingItems = project.Select(s => new BriefingItem
                 {
                     TaskId = s.TaskId,
@@ -199,6 +206,7 @@ namespace TaskInsightEngine.Infrastructure.Jobs
                 await _notificationService.NotifyBriefingAsync(new NotifyRiskDetailsRequest
                 {
                     Email = email,
+                    ProjectName = projectInfo.Name,
                     BriefingDetails = briefingResponse.BriefingDetails
                 }).ConfigureAwait(false);
 

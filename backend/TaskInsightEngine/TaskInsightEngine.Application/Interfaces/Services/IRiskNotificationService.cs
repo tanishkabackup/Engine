@@ -4,6 +4,6 @@ namespace TaskInsightEngine.Application.Interfaces.Services
 {
     public interface IRiskNotificationService
     {
-        Task NotifyBriefingAsync(NotifyRiskDetailsRequest request);
+        Task NotifyBriefingAsync(NotifyRiskDetailsRequest request );
     }
 }
