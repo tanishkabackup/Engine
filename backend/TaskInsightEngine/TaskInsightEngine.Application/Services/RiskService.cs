@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Threading;
 using TaskInsightEngine.Application.Dtos.Risk;
 using TaskInsightEngine.Application.Interfaces.Repositories;
 using TaskInsightEngine.Application.Interfaces.Services;
 using TaskInsightEngine.Domain.Constants;
 using TaskInsightEngine.Domain.Entities;
+
 
 
 namespace TaskInsightEngine.Application.Services
@@ -14,13 +14,15 @@ namespace TaskInsightEngine.Application.Services
     {
         private readonly RiskEngineSettings _riskEngineSettings;
         private readonly IRiskRepository _riskRepository;
+        private readonly IProjectRepository _projectRepository;
         private readonly IJobScheduler _jobScheduler;
         private readonly ILogger<RiskService> _logger;
 
-        public RiskService(IOptions<RiskEngineSettings> _settings, IRiskRepository riskRepository, IJobScheduler jobScheduler, ILogger<RiskService> logger)
+        public RiskService(IOptions<RiskEngineSettings> _settings, IRiskRepository riskRepository, IProjectRepository projectRepository, IJobScheduler jobScheduler, ILogger<RiskService> logger)
         {
             _riskEngineSettings = _settings.Value;
             _riskRepository = riskRepository;
+            _projectRepository = projectRepository;
             _jobScheduler = jobScheduler;
             _logger = logger;
         }
@@ -101,7 +103,7 @@ namespace TaskInsightEngine.Application.Services
             }
         }
 
-        private static string DetermineRiskLevel(int score,Thresholds thresholds)
+        private static string DetermineRiskLevel(int score, Thresholds thresholds)
         {
             return score switch
             {
@@ -170,45 +172,114 @@ namespace TaskInsightEngine.Application.Services
             }
         }
 
-        public async Task<CreateRiskSubscriptionResponse> CreateRiskSubcriptionAsync(CreateRiskSubscriptionRequest request)
+        public async Task<CreateProjectRiskSubscriptionResponse> CreateProjectRiskSubcriptionAsync(CreateProjectRiskSubscriptionRequest request)
         {
-            _logger.LogInformation("The process for {Method} has started", nameof(CreateRiskSubcriptionAsync));
+            _logger.LogInformation("The process for {Method} has started", nameof(CreateProjectRiskSubcriptionAsync));
+
             try
             {
-
                 var existingSubscriptions = await _riskRepository.GetRiskSubscriptionAsync(request.Email);
-                await _riskRepository.CancelSubscriptionAsync(existingSubscriptions.Subscriptions);
 
-                var newSubscriptions = request.ProjectIds.Select(id => new RiskSubscription
+                await _riskRepository.CancelSubscriptionAsync(existingSubscriptions);
+
+                var newSubscriptions = request.ProjectIds.Select(projectId =>
                 {
-                    UserEmail = request.Email,
-                    ProjectId = id
+                    var subscriptionGuid = Guid.NewGuid().ToString("N")[..8];
+
+                    var scheduleRequest = new ScheduleRiskDeliveryRequest
+                    {
+                        Email = request.Email,
+                        Hours = request.Hours,
+                        Minutes = request.Minutes,
+                        SubscriptionGuid = subscriptionGuid
+                    };
+
+                    var jobResponse = _jobScheduler.ScheduleRiskSubscriptionDelivery(scheduleRequest);
+
+                    return new RiskSubscription
+                    {
+                        UserEmail = request.Email,
+                        ProjectId = projectId,
+                        NextRun = jobResponse.Schedule,
+                        RiskSubscriptionGuid = subscriptionGuid
+                    };
                 }).ToList();
 
                 await _riskRepository.SaveRiskSubscriptionAsync(newSubscriptions);
-                var scheduleRiskDeliveryRequest = new ScheduleRiskDeliveryRequest
+
+                return new CreateProjectRiskSubscriptionResponse
                 {
-                    Email = request.Email,
-                    Hours = request.Hours,
-                    Minutes = request.Minutes
-
+                    JobId = "Multiple Jobs Created",
+                    NextRun = newSubscriptions.FirstOrDefault()?.NextRun
                 };
-
-                var jobResponse = _jobScheduler.ScheduleRiskSubscriptionDelivery(scheduleRiskDeliveryRequest);
-
-                return new CreateRiskSubscriptionResponse
-                {
-                    JobId = jobResponse.JobId,
-                    NextRun = jobResponse.Schedule
-                };
-
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred during the {Method} process.", nameof(CreateRiskSubcriptionAsync));
+                _logger.LogError(ex, "An error occurred during the {Method} process.", nameof(CreateProjectRiskSubcriptionAsync));
                 throw;
             }
         }
 
+        public async Task<GetProjectRiskSubscriptionResponse> GetProjectRiskSubcriptionAsync(GetProjectRiskSubscriptionRequest request)
+        {
+            _logger.LogInformation("The process for {Method} has started", nameof(GetProjectRiskSubcriptionAsync));
+            try
+            {
+                var subscriptions = await _riskRepository.GetRiskSubscriptionAsync(request.Email);
+                var projectIds = subscriptions.Select(p => p.ProjectId).ToList();
+                var projects = await _projectRepository.GetProjectsAsync(projectIds);
+
+                var response = subscriptions.Select(s => new RiskSubscriptionDto
+                {
+                    ProjectName = projects?.FirstOrDefault(p => p.ProjectId == s.ProjectId)?.ProjectName,
+                    NextRun = s.NextRun,
+                    UserEmail = s.UserEmail,
+                    CreatedAt = s.CreatedAt,
+                    ProjectId = s.ProjectId,
+                    RiskSubscriptionId = s.Id,
+                    RiskSubscriptionGuid = s.RiskSubscriptionGuid
+                }).ToList();
+
+                return new GetProjectRiskSubscriptionResponse
+                {
+                    RiskSubscriptions = response
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred during the {Method} process.", nameof(GetProjectRiskSubcriptionAsync));
+                throw;
+            }
+        }
+
+        public async Task<CancelRiskSubscriptionResponse> CancelProjectRiskSubscriptionAsync(CancelProjectRiskSubscriptionRequest request)
+        {
+            _logger.LogInformation("The process for {Method} has started", nameof(CancelProjectRiskSubscriptionAsync));
+            try
+            {
+                var subscriptions = request.Subscriptions.Select(s => new RiskSubscription
+                {
+                    Id = s.RiskSubscriptionId,
+                    ProjectId = s.ProjectId,
+                    NextRun = s.NextRun,
+                    CreatedAt = s.CreatedAt,
+                    UserEmail = s.UserEmail,
+                    RiskSubscriptionGuid = s.RiskSubscriptionGuid
+                }).ToList();
+
+                _jobScheduler.DeleteRiskSubscription(subscriptions);
+                await _riskRepository.CancelSubscriptionAsync(subscriptions);
+
+                return new CancelRiskSubscriptionResponse
+                {
+                    IsSuccess = true
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred during the {Method} process.", nameof(CancelProjectRiskSubscriptionAsync));
+                throw;
+            }
+        }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Hangfire;
 using TaskInsightEngine.Application.Dtos.Risk;
 using TaskInsightEngine.Application.Interfaces.Services;
+using TaskInsightEngine.Domain.Constants;
+using TaskInsightEngine.Domain.Entities;
 
 namespace TaskInsightEngine.Infrastructure.Jobs
 {
@@ -15,7 +17,7 @@ namespace TaskInsightEngine.Infrastructure.Jobs
 
         public ScheduleRiskDeliveryResponse ScheduleRiskSubscriptionDelivery(ScheduleRiskDeliveryRequest request)
         {
-            var jobId = $"daily-risk-snapshot:{request.Email}";
+            var jobId = CacheKeys.DailyRiskJobId(request.SubscriptionGuid);
             var cron = Cron.Daily(request.Hours, request.Minutes);
 
             var indiaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
@@ -36,6 +38,16 @@ namespace TaskInsightEngine.Infrastructure.Jobs
                 CronExpression = cron,
                 Schedule = $"Daily at {request.Hours:D2}:{request.Minutes:D2} IST"
             };
+        }
+
+        public void DeleteRiskSubscription(List<RiskSubscription> subscriptions)
+        {
+            subscriptions.ForEach(subscription =>
+            {
+                var jobId = CacheKeys.DailyRiskJobId(subscription.RiskSubscriptionGuid);
+
+                _recurringJobManager.RemoveIfExists(jobId);
+            });
         }
     }
 }

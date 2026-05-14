@@ -5,5 +5,6 @@
        public string Email { get; set; }
        public int Hours { get; set; }
        public int Minutes { get; set; }
+       public string SubscriptionGuid { get; set; } 
     }
 }

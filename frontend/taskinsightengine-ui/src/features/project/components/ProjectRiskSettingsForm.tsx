@@ -1,11 +1,11 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useCreateRiskSubscription } from "../hooks/useTasks";
-import { CreateRiskSubscriptionRequest } from "@/types/request";
+import { CreateProjectRiskSubscriptionRequest } from "@/types/request";
 import { useCurrentUser } from "@/features/auth/hooks/useAuth";
 import { useGetUserProjects } from "@/features/project/hooks/useGetUserProjects";
 import { ProjectDetail } from "@/types/response";
+import { useCreateRiskSubscription } from "@/features/project/hooks/useProjects";
 
 const RISKFORM_FIELDS = {
     HOURS: "hours",
@@ -35,7 +35,7 @@ export default function RiskSettingsForm() {
             minutes: data[RISKFORM_FIELDS.MINUTES],
             projectIds: data[RISKFORM_FIELDS.PROJECT_IDS].map(Number),
             email: currentUserEmail
-        } as CreateRiskSubscriptionRequest
+        } as CreateProjectRiskSubscriptionRequest
         createRiskSubscription(createRiskSubscriptionRequest, {
             onSuccess: () => {
                 reset();

@@ -76,7 +76,7 @@ export default function ShowTaskImpediments({ impediments }: ShowTaskImpediments
                     {imp.riskDescription}
                   </p>
 
-                  {/* FOOTER (HORIZONTAL ONLY) */}
+                  {/* FOOTER */}
                   <div className="flex justify-between items-end pt-4 border-t border-slate-100">
 
                     {/* LEFT */}

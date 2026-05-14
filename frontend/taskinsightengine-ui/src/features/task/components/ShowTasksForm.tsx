@@ -1,10 +1,10 @@
 "use client";
 
-import { useGetProjectsTasks } from "../hooks/useProjects";
 import { GetProjectTasksRequest } from "../../../types/request";
 import { useState } from "react";
-import UpdateTaskForm from "./UpdateTaskForm";
 import { Priority } from "@/types/constants";
+import { useGetProjectsTasks } from "@/features/project/hooks/useProjects";
+import UpdateTaskForm from "./UpdateTaskForm";
 interface ShowTasksProps {
     projectId: number;
     memberId: number;

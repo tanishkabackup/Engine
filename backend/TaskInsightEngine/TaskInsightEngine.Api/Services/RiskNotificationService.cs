@@ -11,7 +11,7 @@ namespace TaskInsightEngine.Api.Services
 
         public async Task NotifyBriefingAsync(NotifyRiskDetailsRequest request)
         {
-            await _hubContext.Clients.User(request.Email).SendAsync("ReceiveDailyBriefing", request.BriefingDetails, request.ProjectName);
+            await _hubContext.Clients.User(request.Email).SendAsync("ReceiveDailyBriefing", request.BriefingDetails, request.ProjectName,request.ProjectId);
         }
     }
 }

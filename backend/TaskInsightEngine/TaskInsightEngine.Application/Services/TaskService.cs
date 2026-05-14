@@ -306,7 +306,7 @@ namespace TaskInsightEngine.Application.Services
             _logger.LogInformation("The process for {Method} has started", nameof(AddImpedimentCommentAsync));
             try
             {
-                var projectMemberId = await _projectRepository.GetProjectMemberByEmailAsync(request.Email);
+                var projectMemberId = (await _projectRepository.GetProjectMemberByIdAsync(request.Email)).FirstOrDefault();
                 var ImpedimentComment = new TaskImpedimentComment
                 {
                     TaskImpedimentId = request.TaskImpedimentId,

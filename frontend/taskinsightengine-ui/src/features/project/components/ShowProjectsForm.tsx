@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useCurrentUser } from "@/features/auth/hooks/useAuth";
-import ShowTasks from "./ShowTasksForm";
 import { useGetUserProjects } from "../hooks/useGetUserProjects";
+import ShowTasks from "@/features/task/components/ShowTasksForm";
 
 export default function ShowProjectsForm() {
     const { email: currentUserEmail } = useCurrentUser();
@@ -52,8 +52,13 @@ export default function ShowProjectsForm() {
                             </div>
 
                             <div className="flex items-center justify-between pt-6 mt-4 border-t border-slate-100">
+                                <div className="flex flex-col gap-1">
                                 <div className="text-[10px] text-slate-400 font-bold uppercase">
-                                    Due: {new Date(project.closingDate).toLocaleDateString()}
+                                    Start Date: {new Date(project.startDate).toLocaleDateString()}
+                                </div>
+                                <div className="text-[10px] text-slate-400 font-bold uppercase">
+                                    Due Date: {new Date(project.closingDate).toLocaleDateString()}
+                                </div>
                                 </div>
 
                                 <button

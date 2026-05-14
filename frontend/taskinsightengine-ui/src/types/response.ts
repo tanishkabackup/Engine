@@ -1,19 +1,18 @@
 import { JSX } from "react/jsx-runtime";
-import { ImpedimentCommentDto } from "./request";
+import { BriefingItem, ImpedimentCommentDto } from "./request";
 
 export interface GetAllUsersResponse {
-       users: UserDetail[];
+    users: UserDetail[];
 }
 
-export interface UserDetail{
+export interface UserDetail {
     userId: number;
     userName: string;
     email: string;
     role: string;
 }
 
-export interface UserLoginDto
-{
+export interface UserLoginDto {
     email: string;
     fullName: string;
     role: string;
@@ -23,21 +22,19 @@ export interface CreateProjectResponse {
     projectId: number;
 }
 
-export interface GetProjectMembersResponse
-{
+export interface GetProjectMembersResponse {
     members: MemberDetail[];
 }
 
-export interface MemberDetail
-{
-    fullName: string ;
+export interface MemberDetail {
+    fullName: string;
     projectId: number;
     memberId: number;
     role: string;
-    email:string;
+    email: string;
 }
 
-export interface ProjectDetail{
+export interface ProjectDetail {
     name: string;
     projectId: number;
     description: string;
@@ -48,34 +45,34 @@ export interface ProjectDetail{
     createdAt: Date;
 }
 
-export interface GetAllProjectsResponse{
+export interface GetAllProjectsResponse {
     projects: ProjectDetail[];
 }
 
-export interface CreateTaskResponse{
+export interface CreateTaskResponse {
     taskId: number;
 }
 
-export interface AssignTaskResponse{
+export interface AssignTaskResponse {
     taskAssignmentId: number;
 }
 
-export interface LoginResponse{
-   user:UserLoginDto;
+export interface LoginResponse {
+    user: UserLoginDto;
 }
 
-export interface LogoutResponse{
+export interface LogoutResponse {
     isSuccess: boolean;
     message: string;
 }
 
-export interface GetProjectTasksResponse{
+export interface GetProjectTasksResponse {
     taskList: TaskDetail[];
 }
 
-export interface TaskDetail{
+export interface TaskDetail {
     taskId: number;
-    title : string ;
+    title: string;
     description: string;
     priorityStatus: string;
     hours: number;
@@ -89,22 +86,21 @@ export interface TaskDetail{
 
 export interface DailyTaskUpdateDetail {
     taskId: number;
-    status: string ;
+    status: string;
     updatedEta: Date;
     comment: string;
     effortHours: number;
     lastUpdatedDate: Date;
     projectMemberName: string;
-    Email:string;
+    Email: string;
 }
 
-export interface GetDailyTaskUpdatesResponse
-{
+export interface GetDailyTaskUpdatesResponse {
     dailyTaskUpdates: DailyTaskUpdateDetail[];
 }
 
 export interface AddTaskImpedimentResponse {
-    isSuccess:boolean
+    isSuccess: boolean
     taskImpedimentId: number
 }
 
@@ -112,21 +108,106 @@ export interface GetTaskImpedimentResponse {
     taskImpediments: TaskImpedimentDetail[];
 }
 
-export interface TaskImpedimentDetail
-{
+export interface TaskImpedimentDetail {
     taskImpedimentId: number;
     title: string;
     riskStatus: string;
     isResolved: boolean;
-    resolvedBy : string;
+    resolvedBy: string;
     taskId: number;
-    riskDescription:string;
+    riskDescription: string;
     createdBy: string;
     lastUpdated: Date;
-    createdAt:Date;
+    createdAt: Date;
 }
 
-export interface GetTaskImpedimentCommentsResponse
+export interface GetTaskImpedimentCommentsResponse {
+    impedimentComments: ImpedimentCommentDto[];
+}
+
+export interface GetProjectDashboardResponse {
+    projectMetrics: ProjectMetricsDto[];
+}
+
+export interface ProjectMetricsDto {
+    projectId: number;
+    projectName: string;
+    metrics: ProjectHealthMetrics;
+    groups: BriefingSnapshotView;
+    workload: TeamMemberWorkload[];
+}
+
+export interface ProjectHealthMetrics {
+    totalTasks: number;
+    critical: number;
+    warning: number;
+    healthy: number;
+    recovering: number;
+    healthPercentage: number;
+}
+
+export interface TeamMemberWorkload {
+    assigneeName?: string;
+    roleName?: string;
+    totalItems: number;
+    critical: number;
+    warning: number;
+    recovering: number;
+    healthy: number;
+}
+
+
+export interface BriefingSnapshotView {
+    needsAttention: BriefingItem[];
+    silentRisk: BriefingItem[];
+    recovering: BriefingItem[];
+    healthy: RiskSnapshotDto[];
+    history: ProjectTaskHistory;
+}
+
+export interface RiskSnapshotDto {
+    taskId: number;
+    projectId: number;
+    title?: string;
+    assigneeName?: string;
+    assigneeRole?: string;
+    date: Date;
+    prevScore?: number;
+    currentScore?: number;
+    prevLevel?: string;
+    currentLevel?: string;
+    delta?: number;
+    topReasons?: string;
+    movementId: number;
+    assigneeId: number;
+}
+
+export interface ProjectTaskHistory {
+    taskHistory: TaskHistoryDto[];
+}
+
+export interface TaskHistoryDto {
+    taskId: number;
+    title?: string;
+    date: Date;
+    riskChange?: string;
+    impact?: string;
+    owner?: string;
+    keyInsight?: string;
+}
+
+export interface GetProjectRiskSubscriptionResponse 
 {
-    impedimentComments : ImpedimentCommentDto[];
+   riskSubscriptions: RiskSubscriptionDto[];
+}
+
+export interface RiskSubscriptionDto
+{
+  riskSubscriptionId:number;
+  riskSubscriptionGuid : string;
+  userEmail?: string;
+  projectId: number;
+  createdAt: string;
+  nextRun?: string;
+  projectName?: string;
 }

@@ -18,7 +18,7 @@ namespace TaskInsightEngine.Infrastructure.Jobs
         private readonly IRiskNotificationService _notificationService;
         private readonly ILogger<DailyRiskJob> _logger;
 
-        public DailyRiskJob( IRiskService riskService,IRiskRepository riskRepository, IProjectRepository projectRepository,IRiskNotificationService notificationService,IOptions<RiskEngineSettings> riskSettings,ILogger<DailyRiskJob> logger)
+        public DailyRiskJob(IRiskService riskService, IRiskRepository riskRepository, IProjectRepository projectRepository, IRiskNotificationService notificationService, IOptions<RiskEngineSettings> riskSettings, ILogger<DailyRiskJob> logger)
         {
             _riskService = riskService;
             _riskRepository = riskRepository;
@@ -31,7 +31,7 @@ namespace TaskInsightEngine.Infrastructure.Jobs
         [AutomaticRetry(Attempts = 1)]
         public async Task RunAsync(string email, CancellationToken token)
         {
-            
+
             _logger.LogInformation("Starting Daily Risk Job for: {Email}", email);
 
             try
@@ -39,32 +39,30 @@ namespace TaskInsightEngine.Infrastructure.Jobs
                 var today = DateTime.UtcNow.Date;
                 var subscriptions = await _riskRepository.GetRiskSubscriptionAsync(email).ConfigureAwait(false);
 
-                if (subscriptions?.Subscriptions == null || subscriptions.Subscriptions.Count == 0)
+                if (subscriptions == null || subscriptions.Count == 0)
                 {
                     _logger.LogWarning("Job aborted: No active risk subscriptions found for {Email}", email);
                     return;
                 }
 
-                _logger.LogInformation("Processing {Count} project subscriptions for {Email}", subscriptions.Subscriptions.Count, email);
-
                 var allSnapshots = new List<RiskSnapshot>();
 
-                foreach (var subscription in subscriptions.Subscriptions)
+                foreach (var subscription in subscriptions)
                 {
                     token.ThrowIfCancellationRequested();
                     var projectId = subscription.ProjectId;
 
-                    var getOpenTaskResponse = _riskRepository.GetOpenTaskItems(projectId);
-                    var getRiskSnapshotResponse = _riskRepository.GetRiskSnapshot(projectId);
+                    var getOpenTaskResponse = await _riskRepository.GetOpenTaskItems(projectId);
+                    var getRiskSnapshotResponse = await _riskRepository.GetLatestRiskSnapshot(projectId);
 
-                    await Task.WhenAll(getOpenTaskResponse, getRiskSnapshotResponse).ConfigureAwait(false);
+                    //await Task.WhenAll(getOpenTaskResponse, getRiskSnapshotResponse).ConfigureAwait(false);
 
-                    var taskResponse = await getOpenTaskResponse;
-                    var latestRisks = await getRiskSnapshotResponse;
+                    var taskResponse = getOpenTaskResponse;
+                    var latestRisks = getRiskSnapshotResponse;
 
                     var openTasks = taskResponse?.OpenTasks ?? [];
 
-                    
+
                     _logger.LogInformation("Project {ProjectId}: Analyzing {TaskCount} open tasks", projectId, openTasks.Count);
 
                     foreach (var task in openTasks)
@@ -137,7 +135,7 @@ namespace TaskInsightEngine.Infrastructure.Jobs
             }
             catch (Exception ex)
             {
-               
+
                 _logger.LogError(ex, "Critical failure in DailyRiskJob for {Email}", email);
                 throw;
             }
@@ -147,8 +145,8 @@ namespace TaskInsightEngine.Infrastructure.Jobs
         {
             if (baseline is null)
             {
-               return result.Score >= _riskEngineSettings.MovementRules.EscalationLimit? RiskMovement.Escalated: RiskMovement.New;
-                
+                return result.Score >= _riskEngineSettings.MovementRules.EscalationLimit ? RiskMovement.Escalated : RiskMovement.New;
+
             }
 
             if (result.IsHealthy)
@@ -184,7 +182,7 @@ namespace TaskInsightEngine.Infrastructure.Jobs
 
             foreach (var project in groupedByProject)
             {
-                var projectInfo = projects.FirstOrDefault(x => x.Id == project.Key);
+                var projectInfo = projects.FirstOrDefault(x => x.ProjectId == project.Key);
                 var briefingItems = project.Select(s => new BriefingItem
                 {
                     TaskId = s.TaskId,
@@ -206,7 +204,8 @@ namespace TaskInsightEngine.Infrastructure.Jobs
                 await _notificationService.NotifyBriefingAsync(new NotifyRiskDetailsRequest
                 {
                     Email = email,
-                    ProjectName = projectInfo.Name,
+                    ProjectName = projectInfo.ProjectName,
+                    ProjectId = projectInfo.ProjectId,
                     BriefingDetails = briefingResponse.BriefingDetails
                 }).ConfigureAwait(false);
 

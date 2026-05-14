@@ -9,6 +9,7 @@ namespace TaskInsightEngine.Application.Interfaces.Services
       Task<GetProjectsResponse> GetAllProjectsAsync(GetProjectsRequest request);
       Task<GetProjectMembersResponse> GetProjectMembersAsync(GetProjectMembersRequest request);
       Task<GetProjectTasksResponse> GetProjectTasksAsync(GetProjectTasksRequest request);
+      Task<GetProjectDashboardResponse> GetProjectDashboardAsync(GetProjectDashboardRequest request);
     }
         
 }

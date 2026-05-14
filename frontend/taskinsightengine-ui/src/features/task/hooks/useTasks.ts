@@ -1,8 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
-import { AddTaskImpedimentRequest, AssignTaskRequest, CreateRiskSubscriptionRequest, CreateTaskRequest, DailyTaskUpdateRequest, GetDailyTaskUpdateRequest, GetTaskImpedimentCommentsRequest, GetTaskImpedimentRequest } from "../../../types/request";
-import { AddTaskImpediment, assignTask, createTask, DailyTaskUpdate, GetDailyTasksUpdate, GetTaskImpedimentComments, GetTaskImpediments } from "../services/taskservice";
-import { AddTaskImpedimentResponse, AssignTaskResponse, CreateTaskResponse } from "../../../types/response";
-import { CreateRiskSubscription } from "@/features/project/services/projectservice";
+import { AddTaskImpedimentRequest, AssignTaskRequest, CreateTaskRequest, DailyTaskUpdateRequest, GetDailyTaskUpdateRequest, GetTaskImpedimentCommentsRequest, GetTaskImpedimentRequest } from "../../../types/request";
+import { addTaskImpediment, assignTask, createTask, dailyTaskUpdate, getDailyTasksUpdate, getTaskImpedimentComments, getTaskImpediments} from "../services/taskservice";
+import { AddTaskImpedimentResponse, AssignTaskResponse, CreateTaskResponse, GetDailyTaskUpdatesResponse, GetTaskImpedimentCommentsResponse, GetTaskImpedimentResponse } from "../../../types/response";
 
 export const useCreateTask = () => {
     return useMutation<CreateTaskResponse, Error, CreateTaskRequest>({
@@ -12,43 +11,38 @@ export const useCreateTask = () => {
 
 export const UseDailyTaskUpdate = () => {
     return useMutation<void, Error, DailyTaskUpdateRequest>({
-        mutationFn: (data): Promise<void> => DailyTaskUpdate(data)
+        mutationFn: (data): Promise<void> => dailyTaskUpdate(data)
     });
 }
 
 export const useGetDailyTaskUpdates = (request: GetDailyTaskUpdateRequest) => {
     return useQuery({
         queryKey: ["taskUpdates", request.taskId],
-        queryFn: () => GetDailyTasksUpdate(request),
-        select: (data) => data.dailyTaskUpdates,
+        queryFn: () => getDailyTasksUpdate(request),
+        select: (data:GetDailyTaskUpdatesResponse) => data.dailyTaskUpdates,
     });
 }
 
 export const useAddTaskImpediment = () => {
     return useMutation<AddTaskImpedimentResponse, Error, AddTaskImpedimentRequest>({
-        mutationFn: (data) => AddTaskImpediment(data)
+        mutationFn: (data) => addTaskImpediment(data)
     });
 }
 
 export const useGetImpediments = (request: GetTaskImpedimentRequest) => {
     return useQuery({
         queryKey: ["taskImpediments", request.taskId],
-        queryFn: () => GetTaskImpediments(request),
-        select: (data) => data.taskImpediments,
+        queryFn: () => getTaskImpediments(request),
+        select: (data: GetTaskImpedimentResponse) => data.taskImpediments,
     });
 }
 
 export const useGetTaskImpedimentComments = (request: GetTaskImpedimentCommentsRequest) => {
     return useQuery({
         queryKey: ["taskImpedimentComments", request.taskImpedimentId],
-        queryFn: () => GetTaskImpedimentComments(request),
-        select: (data) => data.impedimentComments
+        queryFn: () => getTaskImpedimentComments(request),
+        select: (data:GetTaskImpedimentCommentsResponse) => data.impedimentComments
     })
-}
-
-export const useCreateRiskSubscription = () => {
-    return useMutation<void, Error, CreateRiskSubscriptionRequest>
-        ({ mutationFn: (data) => CreateRiskSubscription(data) })
 }
 
 export const useTaskAssignment = () => {

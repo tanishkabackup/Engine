@@ -72,12 +72,12 @@ namespace TaskInsightEngine.Api.Controllers
         [HttpPost]
         [Authorize]
         [ApiExplorerSettings(GroupName = "v1")]
-        [ProducesResponseType(typeof(CreateRiskSubscriptionResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CreateProjectRiskSubscriptionResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails),StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [Route("CreateRiskSubscription")]
-        public async Task<IActionResult> CreateRiskSubscription([FromBody] CreateRiskSubscriptionRequest request,
-        [FromServices] IValidator<CreateRiskSubscriptionRequest> validator)
+        [Route("CreateProjectRiskSubscription")]
+        public async Task<IActionResult> CreateProjectRiskSubscription([FromBody] CreateProjectRiskSubscriptionRequest request,
+        [FromServices] IValidator<CreateProjectRiskSubscriptionRequest> validator)
         {
             var validationResult = await validator.ValidateAsync(request);
 
@@ -89,13 +89,44 @@ namespace TaskInsightEngine.Api.Controllers
 
             try
             {
-                var response = await _riskService.CreateRiskSubcriptionAsync(request);
+                var response = await _riskService.CreateProjectRiskSubcriptionAsync(request);
                 return Ok(response);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, "An error occurred while scheduling.");
             }
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ApiExplorerSettings(GroupName = "v1")]
+        [Route("GetProjectDashboard")]
+        public async Task<IActionResult> GetProjectDashboard(GetProjectDashboardRequest request)
+        {
+            var response = await _projectService.GetProjectDashboardAsync(request);
+            return Ok(response);
+        }
+
+
+        [HttpPost]
+        [Authorize]
+        [ApiExplorerSettings(GroupName = "v1")]
+        [Route("GetProjectRiskSubscription")]
+        public async Task<IActionResult> GetProjectRiskSubscription(GetProjectRiskSubscriptionRequest request)
+        {
+            var response = await _riskService.GetProjectRiskSubcriptionAsync(request);
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ApiExplorerSettings(GroupName = "v1")]
+        [Route("CancelProjectRiskSubscription")]
+        public async Task<IActionResult> CancelProjectRiskSubscription(CancelProjectRiskSubscriptionRequest request)
+        {
+            var response = await _riskService.CancelProjectRiskSubscriptionAsync(request);
+            return Ok(response);
         }
 
     }

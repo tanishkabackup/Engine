@@ -9,9 +9,11 @@ namespace TaskInsightEngine.Application.Interfaces.Repositories
         Task SaveRiskBriefingAsync(BriefingEntry entry);
         Task AddRiskSnapShotAsync(List<RiskSnapshot> snapshots);
         Task<GetOpenTaskResponse>GetOpenTaskItems(int ProjectId);
-        Task<Dictionary<long, RiskBaselineDto>> GetRiskSnapshot(long projectId);
+        Task<Dictionary<long, RiskBaselineDto>> GetLatestRiskSnapshot(long projectId);
         Task SaveRiskSubscriptionAsync(List<RiskSubscription> subscriptions);
-        Task<GetRiskSubscriptionResponse> GetRiskSubscriptionAsync(string email);
+        Task<List<RiskSubscription>> GetRiskSubscriptionAsync(string email);
         Task CancelSubscriptionAsync(List<RiskSubscription> subscription);
+        Task<List<BriefingEntry>> GetProjectBriefingsAsync(List<int> projectIds);
+        Task<List<RiskSnapshotDto>> GetRiskSnapshotsAsync(int projectId);
     }
 }

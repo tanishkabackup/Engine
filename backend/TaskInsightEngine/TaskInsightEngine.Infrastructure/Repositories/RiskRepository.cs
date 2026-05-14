@@ -78,9 +78,9 @@ namespace TaskInsightEngine.Infrastructure.Repositories
             }
         }
 
-        public async Task<Dictionary<long, RiskBaselineDto>> GetRiskSnapshot(long projectId)
+        public async Task<Dictionary<long, RiskBaselineDto>> GetLatestRiskSnapshot(long projectId)
         {
-            _logger.LogInformation("Database operations for {Method} started ", nameof(GetRiskSnapshot));
+            _logger.LogInformation("Database operations for {Method} started ", nameof(GetLatestRiskSnapshot));
             try
             {
                 return await _context.Database
@@ -90,7 +90,7 @@ namespace TaskInsightEngine.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Database error for {Method}", nameof(GetRiskSnapshot));
+                _logger.LogError(ex, "Database error for {Method}", nameof(GetLatestRiskSnapshot));
                 throw;
             }
         }
@@ -125,16 +125,13 @@ namespace TaskInsightEngine.Infrastructure.Repositories
             }
         }
 
-        public async Task<GetRiskSubscriptionResponse> GetRiskSubscriptionAsync(string email)
+        public async Task<List<RiskSubscription>> GetRiskSubscriptionAsync(string email)
         {
             _logger.LogInformation("Database operations for {Method} started ", nameof(GetRiskSubscriptionAsync));
             try
             {
-                var subscriptions = await _context.RiskSubscriptions.Where(s => s.UserEmail == email).AsNoTracking().ToListAsync();
-                return new GetRiskSubscriptionResponse
-                {
-                    Subscriptions = subscriptions
-                };
+                return await _context.RiskSubscriptions.Where(s => s.UserEmail == email).AsNoTracking().ToListAsync();
+                
             }
             catch (Exception ex)
             {
@@ -154,6 +151,76 @@ namespace TaskInsightEngine.Infrastructure.Repositories
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Database error for {Method}", nameof(CancelSubscriptionAsync));
+                throw;
+            }
+        }
+
+        public async Task<List<BriefingEntry>> GetProjectBriefingsAsync(List<int> projectIds)
+        {
+            _logger.LogInformation("Database operations for {Method} started ", nameof(GetProjectBriefingsAsync));
+            try
+            {
+                var entries = await _context.BriefingEntries.AsNoTracking().Where(b => 
+                                 b.BriefingSnapshot.NeedsAttention.Any(p=>projectIds.Contains(p.ProjectId)) ||
+                                 b.BriefingSnapshot.Recovering.Any(p=>projectIds.Contains(p.ProjectId)) || 
+                                 b.BriefingSnapshot.SlientRisk.Any(p=>projectIds.Contains(p.ProjectId))).OrderByDescending(x => x.CreatedAt).ToListAsync();
+
+                return entries; 
+               
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Database error for {Method}", nameof(GetProjectBriefingsAsync));
+                throw;
+            }
+        }
+
+        public async Task<List<RiskSnapshotDto>> GetRiskSnapshotsAsync(int projectId)
+        {
+            _logger.LogInformation("Database operations for {Method} started ", nameof(GetRiskSnapshotsAsync));
+            try
+            {
+
+                return await _context.RiskSnapshots.AsNoTracking().Where(r => r.ProjectId == projectId)
+                    .Select(r => new RiskSnapshotDto
+                    {
+                        TaskId = r.TaskId,
+
+                        Title = r.Title,
+
+                        Date = r.Date,
+
+                        PrevScore = r.PrevScore,
+
+                        CurrentScore = r.CurrentScore,
+                        PrevLevel = r.PrevLevel,
+
+                        CurrentLevel = r.CurrentLevel,
+
+                        Delta = r.Delta,
+
+                        TopReasons = r.TopReasons,
+
+                        MovementId = r.MovementId,
+
+                        AssigneeId = r.AssigneeId,
+
+                        ProjectId = r.ProjectId,
+
+                        AssigneeRole = r.TaskItem.TaskAssignment
+                                      .Select(a => a.AssigneeMember.User.Role.Name)
+                                      .FirstOrDefault(),
+
+                        AssigneeName = r.TaskItem.TaskAssignment
+                                   .Select(a => a.AssigneeMember.User.FullName)
+                                   .FirstOrDefault()
+
+                    }).OrderByDescending(x=>x.Date).ToListAsync();
+                
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Database error for {Method}", nameof(GetRiskSnapshotsAsync));
                 throw;
             }
         }

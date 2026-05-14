@@ -1,6 +1,6 @@
 ﻿namespace TaskInsightEngine.Application.Dtos.Risk
 {
-    public class CreateRiskSubscriptionRequest
+    public class CreateProjectRiskSubscriptionRequest
     {
         public string Email { get; set; }
         public List<int> ProjectIds { get; set; } = [];

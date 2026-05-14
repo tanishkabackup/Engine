@@ -1,4 +1,4 @@
-import RiskSettingsForm from "@/features/task/components/RiskSettingsForm";
+import RiskSettingsForm from "@/features/project/components/ProjectRiskSettingsForm";
 
 export default function RiskMonitoringSettingsPage() {
   return (

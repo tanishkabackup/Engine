@@ -38,6 +38,11 @@ export function Navbar() {
                         <Link href="/dashboard/showprojects" className={`transition-colors ${isActive('/dashboard/showprojects')}`}>
                             Projects
                         </Link>
+                         {role === Roles.ProjectManager && (
+                            <Link href="/dashboard/showprojectmetrics" className={`transition-colors ${isActive('/dashboard/createproject')}`}>
+                                Manage Projects
+                            </Link>
+                        )}
                     </div>
                 </div>
 

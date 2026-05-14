@@ -154,24 +154,32 @@ namespace TaskInsightEngine.Infrastructure.Repositories
             }
         }
 
-        public async Task<ProjectMember> GetProjectMemberByEmailAsync(string userEmail)
+        public async Task<List<ProjectMember>> GetProjectMemberByIdAsync(string? userEmail = null, List<int> projectMemberId = null)
         {
-            return await _context.ProjectMembers
-                .Include(pm => pm.User)
-                .ThenInclude(u => u.Role)
-                .AsNoTracking()
-                .FirstAsync(u => u.User.Email == userEmail);
+            _logger.LogInformation("Database operations for {Method} started ", nameof(GetProjectMemberByIdAsync));
+            try
+            {
+                return await _context.ProjectMembers.Include(x => x.User)
+                      .ThenInclude(x => x.Role)
+                      .AsNoTracking()
+                      .Where(x => x.User.Email == userEmail || projectMemberId.Contains(x.ProjectMemberId)).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Database error for {Method}", nameof(GetProjectMemberByIdAsync));
+                throw;
+            }
         }
 
-        public async Task<List<GetProjectResponse>> GetProjectsAsync(List<int> projectIds)
+        public async Task<List<GetProjectDto>> GetProjectsAsync(List<int> projectIds)
         {
             _logger.LogInformation("Database operations for {Method} started ", nameof(GetProjectTasksAsync));
             try
             {
-                return await _context.Projects.Where(x => projectIds.Contains(x.ProjectId)).Select(x => new GetProjectResponse
+                return await _context.Projects.Where(x => projectIds.Contains(x.ProjectId)).Select(x => new GetProjectDto
                 {
-                    Id = x.ProjectId,
-                    Name = x.Name
+                    ProjectId = x.ProjectId,
+                    ProjectName = x.Name
                 })
                .ToListAsync();
             }

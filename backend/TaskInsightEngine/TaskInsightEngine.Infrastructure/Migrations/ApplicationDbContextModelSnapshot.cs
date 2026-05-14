@@ -79,7 +79,6 @@ namespace TaskInsightEngine.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DailyTaskUpdateStatusId"));
 
                     b.Property<string>("Comment")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedDate")
@@ -168,11 +167,9 @@ namespace TaskInsightEngine.Infrastructure.Migrations
                         .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("PriorityId")
@@ -235,7 +232,6 @@ namespace TaskInsightEngine.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RiskId"));
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
@@ -301,7 +297,6 @@ namespace TaskInsightEngine.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("CurrentLevel")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int?>("CurrentScore")
@@ -317,7 +312,6 @@ namespace TaskInsightEngine.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("PrevLevel")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int?>("PrevScore")
@@ -333,7 +327,6 @@ namespace TaskInsightEngine.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TopReasons")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -356,8 +349,16 @@ namespace TaskInsightEngine.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("NextRun")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("ProjectId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("RiskSubscriptionGuid")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("UserEmail")
                         .IsRequired()
@@ -410,6 +411,7 @@ namespace TaskInsightEngine.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StatusId"));
 
                     b.Property<string>("Type")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("StatusId");
@@ -501,7 +503,7 @@ namespace TaskInsightEngine.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW()");
 
-                    b.Property<int>("CreatedBy")
+                    b.Property<int?>("CreatedBy")
                         .HasColumnType("integer");
 
                     b.Property<bool>("IsResolved")
@@ -510,7 +512,7 @@ namespace TaskInsightEngine.Infrastructure.Migrations
                     b.Property<DateTime?>("ResolvedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("ResolvedBy")
+                    b.Property<int?>("ResolvedBy")
                         .HasColumnType("integer");
 
                     b.Property<int>("RiskId")
@@ -546,7 +548,6 @@ namespace TaskInsightEngine.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TaskImpedimentCommentId"));
 
                     b.Property<string>("Comment")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")

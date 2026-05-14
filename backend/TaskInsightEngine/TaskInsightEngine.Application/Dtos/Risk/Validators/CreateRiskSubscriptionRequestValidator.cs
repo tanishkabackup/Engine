@@ -2,7 +2,7 @@
 
 namespace TaskInsightEngine.Application.Dtos.Risk.Validators
 {
-    public class CreateRiskSubscriptionRequestValidator : AbstractValidator<CreateRiskSubscriptionRequest>
+    public class CreateRiskSubscriptionRequestValidator : AbstractValidator<CreateProjectRiskSubscriptionRequest>
     {
         public CreateRiskSubscriptionRequestValidator()
         {
