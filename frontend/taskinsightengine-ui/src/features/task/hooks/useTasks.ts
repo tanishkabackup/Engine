@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
-import { AddTaskImpedimentRequest, AssignTaskRequest, CreateTaskRequest, DailyTaskUpdateRequest, GetDailyTaskUpdateRequest, GetTaskImpedimentCommentsRequest, GetTaskImpedimentRequest } from "../../../types/request";
-import { addTaskImpediment, assignTask, createTask, dailyTaskUpdate, getDailyTasksUpdate, getTaskImpedimentComments, getTaskImpediments} from "../services/taskservice";
-import { AddTaskImpedimentResponse, AssignTaskResponse, CreateTaskResponse, GetDailyTaskUpdatesResponse, GetTaskImpedimentCommentsResponse, GetTaskImpedimentResponse } from "../../../types/response";
+import { AddTaskImpedimentRequest, AssignTaskRequest, CreateTaskRequest, DailyTaskUpdateRequest, GetDailyTaskUpdateRequest, GetTaskImpedimentCommentsRequest, GetTaskImpedimentRequest, UpdateTaskImpedimentRequest } from "../../../types/request";
+import { addTaskImpediment, assignTask, createTask, dailyTaskUpdate, getDailyTasksUpdate, getTaskImpedimentComments, getTaskImpediments, updateTaskImpediment} from "../services/taskservice";
+import { AddTaskImpedimentResponse, AssignTaskResponse, CreateTaskResponse, GetDailyTaskUpdatesResponse, GetTaskImpedimentCommentsResponse, GetTaskImpedimentResponse, UpdateTaskImpedimentResponse } from "../../../types/response";
 
 export const useCreateTask = () => {
     return useMutation<CreateTaskResponse, Error, CreateTaskRequest>({
@@ -50,3 +50,9 @@ export const useTaskAssignment = () => {
         mutationFn: (data) => assignTask(data)
     });
 }
+
+export const useUpdateTaskImpediment=() =>{
+     return useMutation<UpdateTaskImpedimentResponse,Error,UpdateTaskImpedimentRequest>({
+        mutationFn: (data) => updateTaskImpediment(data)
+     }) 
+};

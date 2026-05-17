@@ -197,14 +197,14 @@ namespace TaskInsightEngine.Application.Services
 
                 if (request.IsResolved is true)
                 {
-                    var resolvedMemberId = GetMemberId(request.ResolvedBy, taskAssignments);
+                    var resolvedMemberId = _taskRepository.GetMemberId(request.ResolvedBy, taskAssignments);
                     resolvedDate = DateTime.UtcNow;
                     taskImpediment.ResolvedAt = resolvedDate;
                     taskImpediment.ResolvedBy = resolvedMemberId;
 
                 }
 
-                var createdByMemberId = GetMemberId(request.CreatedBy, taskAssignments);
+                var createdByMemberId = _taskRepository.GetMemberId(request.CreatedBy, taskAssignments);
                 
 
                 taskImpediment.Title = request.Title ?? string.Empty; 
@@ -234,23 +234,7 @@ namespace TaskInsightEngine.Application.Services
 
 
         }
-
-        // Get projectmemberId from the resolvedby email
-        private static int? GetMemberId(string? email, List<TaskAssignment> taskAssignments)
-        {
-            return taskAssignments
-                   .SelectMany(ta => new[]
-                  {
-
-                    new { Id = (int?)ta.AssigneeId, ta.AssigneeMember?.User?.Email },
-                    new { Id = (int?)ta.AssignerId, ta.AssignerMember?.User?.Email },
-                    new { Id = (int?)ta.ManagerId,  ta.Manager?.User?.Email }
-                  })
-                  .FirstOrDefault(match => match.Id != null &&
-                   string.Equals(match.Email, email, StringComparison.OrdinalIgnoreCase))?.Id;
-
-        }
-
+       
         public async Task<GetTaskImpedimentResponse> GetTaskImpedimentAsync(GetTaskImpedimentRequest request)
         {
             try
@@ -359,6 +343,28 @@ namespace TaskInsightEngine.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occured in the {Method}", nameof(GetTaskImpedimentCommentsAsync));
+                throw;
+            }
+        }
+
+        public async Task<UpdateTaskImpedimentResponse> UpdateTaskImpedimentAsync(UpdateTaskImpedimentRequest request)
+        {
+            _logger.LogInformation("The process for {Method} has started ", nameof(UpdateTaskImpedimentAsync));
+            try
+            {
+                var response = await _taskRepository.UpdateTaskImpedimentAsync(request);
+
+                return new UpdateTaskImpedimentResponse
+                {
+                    IsSuccess = response.IsSuccess,
+                    ResolvedAt = response.TaskImpediment?.ResolvedAt,
+                    ResolvedBy = GetMemberNames(response.TaskImpediment?.ResolvedBy, response.TaskAssignments),
+                    Message = response.IsSuccess? "Update Successful" : "Update Failed"
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occured in the {Method}", nameof(UpdateTaskImpedimentAsync));
                 throw;
             }
         }

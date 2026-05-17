@@ -72,7 +72,7 @@ export default function ShowProjectsForm() {
                     ))
                 ) : (
                     <div className="col-span-full text-center py-20 text-slate-400">
-                        No projects assigned to this email.
+                        No projects assigned to this user.
                     </div>
                 )}
             </div>

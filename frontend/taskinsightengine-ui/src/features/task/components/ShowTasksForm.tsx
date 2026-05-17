@@ -74,13 +74,12 @@ export default function ShowTasks({ projectId, memberId, onBack }: ShowTasksProp
                             </div>
 
                             <div className="flex items-center gap-6">
-                                {/* Hours Metric */}
+                               
                                 <div className="text-right">
                                     <p className="text-[10px] font-black text-slate-400 uppercase">Effort</p>
                                     <p className="font-bold text-slate-700">{task.hours} hrs</p>
                                 </div>
 
-                                {/* ETA Metric */}
                                 <div className="text-right border-l border-slate-100 pl-6">
                                     <p className="text-[10px] font-black text-slate-400 uppercase">Deadline</p>
                                     <p className="font-bold text-slate-700">

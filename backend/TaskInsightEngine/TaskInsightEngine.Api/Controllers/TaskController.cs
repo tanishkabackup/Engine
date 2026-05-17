@@ -89,5 +89,15 @@ namespace TaskInsightEngine.Api.Controllers
             return Ok(response);
         }
 
+        [HttpPost]
+        [Authorize]
+        [ApiExplorerSettings(GroupName = "v1")]
+        [Route("UpdateTaskImpediment")]
+        public async Task<IActionResult> UpdateTaskImpediment(UpdateTaskImpedimentRequest request)
+        {
+            var response = await _taskService.UpdateTaskImpedimentAsync(request);
+            return Ok(response);
+        }
+
     }
 }

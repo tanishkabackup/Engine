@@ -80,7 +80,6 @@ export default function UpdateTaskForm({ task, memberId, onBack }: UpdateTaskFor
     return (
         <div className="max-w-5xl mx-auto p-8 bg-white rounded-[2.5rem] shadow-sm border border-slate-200">
 
-            {/* 1. TOP BAR: Navigation & Status */}
             <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
                 <button onClick={onBack} className="flex items-center gap-2 text-slate-400 hover:text-slate-900 font-bold transition-all">
                     <span className="bg-slate-100 p-2 rounded-xl text-xs">←</span> Back to Project
@@ -185,12 +184,12 @@ export default function UpdateTaskForm({ task, memberId, onBack }: UpdateTaskFor
                                 </>
                             ) : (
                                 <div className="py-2.5 px-4 flex items-center justify-between border border-sky-100 rounded-lg bg-gradient-to-r from-sky-50 to-emerald-50/50 shadow-sm">
-                                    {/* Left Side: Status & Label */}
+                                   
                                     <div className="flex items-center gap-3">
-                                        {/* Soft Green Signal */}
+                                        
                                         <div className="relative flex items-center justify-center">
                                             <div className="h-2 w-2 rounded-full bg-emerald-400" />
-                                            {/* Static outer ring for depth */}
+                                            
                                             <div className="absolute h-4 w-4 rounded-full border border-emerald-200/50" />
                                         </div>
 
@@ -228,19 +227,18 @@ export default function UpdateTaskForm({ task, memberId, onBack }: UpdateTaskFor
                                                 title={`Email ${update.projectMemberName}`}
                                                 className="group relative flex items-center gap-3 cursor-pointer"
                                             >
-                                                {/* The Avatar Box */}
                                                 <div className="hidden sm:flex w-12 h-12 rounded-2xl bg-slate-50 items-center justify-center text-slate-400 font-bold text-xs shrink-0 border border-slate-100 group-hover:bg-blue-50 group-hover:text-blue-500 group-hover:border-blue-200 transition-colors">
                                                     {update.projectMemberName ? update.projectMemberName.charAt(0).toUpperCase() : "U"}
                                                 </div>
 
-                                                {/* The Name Text */}
+                                               
                                                 <span className="text-slate-600 group-hover:text-blue-600 group-hover:underline transition-all">
                                                     {update.projectMemberName}
                                                 </span>
                                             </a>
 
                                             <div className="flex-1 space-y-4">
-                                                {/* Header: Status and Metadata in a single clean row */}
+                                              
                                                 <div className="flex flex-wrap items-center justify-between gap-4">
                                                     <div className="flex items-center gap-3">
                                                         <span className="text-[10px] font-black px-3 py-1.5 bg-sky-50 text-sky-700 rounded-xl uppercase tracking-wider border border-sky-100">
@@ -256,14 +254,11 @@ export default function UpdateTaskForm({ task, memberId, onBack }: UpdateTaskFor
                                                     </div>
                                                 </div>
 
-                                                {/* Content: The Comment Box Style */}
                                                 <div className="bg-slate-200/50 rounded-2xl p-5 border border-slate-200">
                                                     <p className="text-sm font-medium text-slate-900 leading-relaxed">
                                                         {update.comment}
                                                     </p>
                                                 </div>
-
-                                                {/* Footer: Date Stamp */}
                                                 <div className="flex justify-end">
                                                     <span className="text-[9px] font-black text-slate-500 uppercase tracking-[0.15em]">
                                                         LastUpdated : {update.lastUpdatedDate ? new Date(update.lastUpdatedDate).toLocaleDateString() : "N/A"}
@@ -274,7 +269,7 @@ export default function UpdateTaskForm({ task, memberId, onBack }: UpdateTaskFor
                                     </div>
                                 ))
                             ) : (
-                                /* Empty State Box */
+
                                 <div className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-[2rem] py-12 flex flex-col items-center justify-center">
                                     <div className="text-slate-300 mb-2">
                                         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -305,13 +300,11 @@ export default function UpdateTaskForm({ task, memberId, onBack }: UpdateTaskFor
                         </label>
 
                         <div className="flex gap-6">
-                            {/* User Avatar */}
                             <div className="hidden sm:flex w-12 h-12 rounded-2xl bg-sky-600 items-center justify-center text-white font-bold text-sm shadow-lg shadow-sky-100 shrink-0">
                                 ME
                             </div>
 
                             <div className="flex-1 space-y-6">
-                                {/* Input Grid: Status, ETA, and Hours */}
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-5 bg-slate-50 rounded-3xl border border-slate-100">
 
                                     {/* Status Group */}
@@ -382,7 +375,6 @@ export default function UpdateTaskForm({ task, memberId, onBack }: UpdateTaskFor
                     </div>
                 </div>
 
-                {/* SIDEBAR: People involved */}
                 <div className="space-y-6">
                     <div className="bg-slate-50 p-6 rounded-3xl space-y-6">
                         <div>

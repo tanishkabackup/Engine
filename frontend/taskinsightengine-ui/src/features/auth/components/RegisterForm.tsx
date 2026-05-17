@@ -129,7 +129,6 @@ export default function RegisterForm() {
             )}
           </div>
 
-          {/* Button */}
           <button
             type="submit"
             disabled={isPending}

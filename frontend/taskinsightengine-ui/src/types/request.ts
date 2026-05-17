@@ -150,3 +150,9 @@ export interface GetProjectRiskSubscriptionRequest {
 export interface CancelProjectRiskSubscriptionRequest {
     subscriptions : RiskSubscriptionDto[];
 }
+
+export interface UpdateTaskImpedimentRequest {
+    taskImpedimentId: number;
+    isResolved: boolean;
+    resolvedBy: string;
+}

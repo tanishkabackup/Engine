@@ -117,6 +117,7 @@ export interface TaskImpedimentDetail {
     taskId: number;
     riskDescription: string;
     createdBy: string;
+    resolvedAt: Date;
     lastUpdated: Date;
     createdAt: Date;
 }
@@ -210,4 +211,10 @@ export interface RiskSubscriptionDto
   createdAt: string;
   nextRun?: string;
   projectName?: string;
+}
+
+export interface UpdateTaskImpedimentResponse {
+    resolvedAt: Date;
+    resolvedBy: string;
+    isSuccess: boolean;
 }

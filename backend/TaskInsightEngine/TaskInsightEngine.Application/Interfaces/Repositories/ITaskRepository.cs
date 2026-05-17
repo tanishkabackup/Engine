@@ -1,4 +1,5 @@
 ﻿using TaskInsightEngine.Application.Dtos.Task;
+using TaskInsightEngine.Application.Dtos.TaskImpediments;
 using TaskInsightEngine.Domain.Entities;
 
 namespace TaskInsightEngine.Application.Interfaces.Repositories
@@ -14,5 +15,8 @@ namespace TaskInsightEngine.Application.Interfaces.Repositories
         Task<List<TaskImpediment>> GetTaskImpedimentsAsync(int taskItemId);
         Task AddImpedimentCommentAsync(TaskImpedimentComment comment);
         Task<List<TaskImpedimentComment>> GetTaskImpedimentCommentsAsync(int taskImpedimentId);
+        Task<UpdateTaskImpedimentDto> UpdateTaskImpedimentAsync(UpdateTaskImpedimentRequest request);
+        public int? GetMemberId(string? email, List<TaskAssignment> taskAssignments);
+         
     }
 }

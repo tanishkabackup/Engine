@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TaskInsightEngine.Application.Dtos.Task;
+using TaskInsightEngine.Application.Dtos.TaskImpediments;
 using TaskInsightEngine.Application.Interfaces.Repositories;
 using TaskInsightEngine.Domain.Entities;
 using TaskInsightEngine.Infrastructure.Persistence;
@@ -25,7 +26,7 @@ namespace TaskInsightEngine.Infrastructure.Repositories
             _logger.LogInformation("Database operations for {Method} started ", nameof(AssignTaskAsync));
             try
             {
-                
+
                 _context.TaskAssignments.AddRange(assignments);
                 await _context.SaveChangesAsync();
 
@@ -77,7 +78,7 @@ namespace TaskInsightEngine.Infrastructure.Repositories
             _logger.LogInformation("Database operations for {Method} started ", nameof(GetDailyTaskUpdatesAsync));
             try
             {
-                return await _context.DailyTaskUpdateStatuses.AsNoTracking().Include(pm=>pm.ProjectMember).ThenInclude(u=>u.User).Where(dtu => dtu.TaskId == request.TaskId).ToListAsync();
+                return await _context.DailyTaskUpdateStatuses.AsNoTracking().Include(pm => pm.ProjectMember).ThenInclude(u => u.User).Where(dtu => dtu.TaskId == request.TaskId).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -95,7 +96,7 @@ namespace TaskInsightEngine.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "Database error for {Method}", nameof(AddTaskImpedimentAsync));
                 throw;
@@ -129,7 +130,7 @@ namespace TaskInsightEngine.Infrastructure.Repositories
             _logger.LogInformation("Database operations for {Method} started ", nameof(GetTaskImpedimentsAsync));
             try
             {
-               return await _context.TaskImpediments.Include(r=>r.Risk).Where(t => t.TaskItemId == taskItemId).ToListAsync();
+                return await _context.TaskImpediments.Include(r => r.Risk).Where(t => t.TaskItemId == taskItemId).ToListAsync();
 
             }
             catch (Exception ex)
@@ -167,6 +168,58 @@ namespace TaskInsightEngine.Infrastructure.Repositories
                 _logger.LogError(ex, "Database error for {Method}", nameof(GetTaskImpedimentCommentsAsync));
                 throw;
             }
+        }
+
+        public async Task<UpdateTaskImpedimentDto> UpdateTaskImpedimentAsync(UpdateTaskImpedimentRequest request)
+        {
+            _logger.LogInformation("Database operations for {Method} started ", nameof(UpdateTaskImpedimentAsync));
+            try
+            {
+                var impediment = await _context.TaskImpediments.FirstOrDefaultAsync(ti => ti.TaskImpedimentId == request.TaskImpedimentId);
+                var taskAssignments = await GetTaskAssignmentsAsync(impediment.TaskItemId);
+                
+                if (impediment is null)
+                {
+                    return new UpdateTaskImpedimentDto();
+
+                }
+                
+                var getResolvedById = GetMemberId(request.ResolvedBy, taskAssignments);
+                impediment.IsResolved = request.IsResolved;
+                impediment.ResolvedBy = getResolvedById;
+                impediment.ResolvedAt = DateTime.UtcNow;
+
+
+                _context.TaskImpediments.Update(impediment);
+                var isSuccess = await _context.SaveChangesAsync() > 0;
+
+                return new UpdateTaskImpedimentDto
+                {
+                    IsSuccess = isSuccess,
+                    TaskImpediment = impediment,
+                    TaskAssignments = taskAssignments
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Database error for {Method}", nameof(UpdateTaskImpedimentAsync));
+                throw;
+            }
+        }
+
+        public int? GetMemberId(string? email, List<TaskAssignment> taskAssignments)
+        {
+            return taskAssignments
+             .SelectMany(ta => new[]
+            {
+
+                    new { Id = (int?)ta.AssigneeId, ta.AssigneeMember?.User?.Email },
+                    new { Id = (int?)ta.AssignerId, ta.AssignerMember?.User?.Email },
+                    new { Id = (int?)ta.ManagerId,  ta.Manager?.User?.Email }
+            })
+            .FirstOrDefault(match => match.Id != null &&
+             string.Equals(match.Email, email, StringComparison.OrdinalIgnoreCase))?.Id;
+
         }
     }
 }

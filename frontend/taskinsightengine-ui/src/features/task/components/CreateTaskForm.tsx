@@ -200,7 +200,6 @@ const { data: projects } = useGetAllProjects(
         <div className="w-full border border-gray-300 rounded-lg overflow-hidden bg-white">
         <div className="max-h-48 overflow-y-auto p-2 space-y-1">
       
-        {/* State: No Project Selected */}
         {!selectedProjectId && (
         <p className="text-sm text-gray-400 p-2 italic text-center">
           Please select a project first...
@@ -234,7 +233,6 @@ const { data: projects } = useGetAllProjects(
         </div>
       </div>
 
-        {/* Submit */}
         <button
           type="submit"
           className="w-full bg-blue-600 text-white py-2 rounded-lg"
