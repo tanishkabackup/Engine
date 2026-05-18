@@ -1,0 +1,24 @@
+# Dependencies & Builds
+node_modules/
+.next/
+out/
+build/
+
+# Environment & Secrets 
+.env
+.env.local
+.env.production
+.env.development
+
+# Logs 
+*.log
+npm-debug.log*
+*.tmp
+.DS_Store
+Thumbs.db
+
+# IDEs & System Configs
+.vscode/
+.idea/
+.git/
+.gitignore

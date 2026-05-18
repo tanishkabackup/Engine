@@ -17,7 +17,7 @@ const RISKFORM_FIELDS = {
 type RiskSettingsFormData = {
     [RISKFORM_FIELDS.HOURS]: number;
     [RISKFORM_FIELDS.MINUTES]: number;
-    [RISKFORM_FIELDS.PROJECT_IDS]: number[];
+    [RISKFORM_FIELDS.PROJECT_IDS]: [];
 }
 
 export default function RiskSettingsForm() {
@@ -33,7 +33,7 @@ export default function RiskSettingsForm() {
         const createRiskSubscriptionRequest = {
             hours: Number(data[RISKFORM_FIELDS.HOURS]),
             minutes: data[RISKFORM_FIELDS.MINUTES],
-            projectIds: data[RISKFORM_FIELDS.PROJECT_IDS].map(Number),
+            projectIds: [].concat(data[RISKFORM_FIELDS.PROJECT_IDS] || []).map(Number),
             email: currentUserEmail
         } as CreateProjectRiskSubscriptionRequest
         createRiskSubscription(createRiskSubscriptionRequest, {

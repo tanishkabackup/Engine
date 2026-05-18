@@ -78,7 +78,7 @@ namespace TaskInsightEngine.Infrastructure.Repositories
             }
         }
 
-        public async Task<Dictionary<long, RiskBaselineDto>> GetLatestRiskSnapshot(long projectId)
+        public async Task<Dictionary<int, RiskBaselineDto>> GetLatestRiskSnapshot(int projectId)
         {
             _logger.LogInformation("Database operations for {Method} started ", nameof(GetLatestRiskSnapshot));
             try

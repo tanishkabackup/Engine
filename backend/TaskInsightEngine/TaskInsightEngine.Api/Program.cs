@@ -1,6 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using TaskInsightEngine.Api.Extensions;
 using TaskInsightEngine.Api.Hubs;
+using TaskInsightEngine.Infrastructure.Persistence;
 using TaskInsightEngine.Infrastructure.Persistence.Configurations;
 
 namespace TaskInsightEngine.Api
@@ -19,12 +21,17 @@ namespace TaskInsightEngine.Api
                 .WriteTo.File(logSettings.LogFilePath , rollingInterval: RollingInterval.Day)
                 .ReadFrom.Configuration(builder.Configuration)
                 .CreateLogger();
-            
+
             // Add services to the container.
             builder.Services.AddOptions<DatabaseSettings>().Bind(builder.Configuration.GetSection(DatabaseSettings.Section)).ValidateOnStart();
 
 
             builder.Host.UseSerilog();
+
+            builder.Services.AddOptions<DatabaseSettings>()
+                .Bind(builder.Configuration.GetSection(DatabaseSettings.Section))
+                .ValidateOnStart();
+
             builder.Services.AddPresentationDI(builder.Configuration);
             builder.Services.AddSignalR();
 
@@ -37,9 +44,9 @@ namespace TaskInsightEngine.Api
                 options.AddPolicy("Frontend", policy =>
                 {
                     policy.WithOrigins("http://localhost:3000")
-                          .AllowAnyHeader()
-                          .AllowAnyMethod()
-                          .AllowCredentials();
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
                 });
             });
 
@@ -50,26 +57,33 @@ namespace TaskInsightEngine.Api
 
             var app = builder.Build();
 
-        
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                db.Database.Migrate();
+            }
 
-            app.UseCors("Frontend");
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+            app.UseRouting();
+
+            app.UseCors("Frontend");
 
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseHangFireDashboard();
             app.MapControllers();
-            app.MapHub<ImpedimentHub>(signalRsettings.ImpedimentHub);
-            app.MapHub<RiskHub>(signalRsettings.RiskHub);
+
+            app.MapHub<ImpedimentHub>(signalRsettings.ImpedimentHub)
+                .RequireCors("Frontend");
+
+            app.MapHub<RiskHub>(signalRsettings.RiskHub)
+                .RequireCors("Frontend");
 
             app.Run();
         }

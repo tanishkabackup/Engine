@@ -1,0 +1,70 @@
+services:
+
+  taskinsightengine-db:
+    image: postgres:16-alpine
+    container_name: taskinsightengine-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+
+  taskinsightengine-redis:
+    image: redis:7-alpine
+    container_name: taskinsightengine-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
+
+
+  taskinsightengine-api:
+    build:
+      context: .
+      dockerfile: backend/TaskInsightEngine/TaskInsightEngine.Api/Dockerfile
+    image: taskinsightapi
+    container_name: taskinsightengine-api
+    restart: unless-stopped
+    depends_on:
+      - taskinsightengine-db
+      - taskinsightengine-redis
+
+    environment:
+      ASPNETCORE_URLS: http://0.0.0.0:5000
+
+      Redis__ConnectionStrings: taskinsightengine-redis:6379,password=${REDIS_PASSWORD},abortConnect=false
+
+      ConnectionStrings__DefaultConnection: Host=taskinsightengine-db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+
+    ports:
+      - "5000:5000"
+
+
+  taskinsightengine-frontend:
+    build:
+      context: ./frontend/taskinsightengine-ui
+      dockerfile: Dockerfile
+    image: taskinsightengine-frontend
+    container_name: taskinsightengine-frontend
+    depends_on:
+      - taskinsightengine-api
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      HOSTNAME: 0.0.0.0
+      PORT: 3000
+
+      NEXT_PUBLIC_API_URL: http://localhost:5000/api
+      NEXT_PUBLIC_API_HUB: http://localhost:5000/hubs/impediments
+      NEXT_PUBLIC_RISK_HUB: http://localhost:5000/hubs/risks
+
+
+volumes:
+  pg_data:

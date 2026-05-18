@@ -36,7 +36,7 @@ export default function UpdateTaskForm({ task, memberId, onBack }: UpdateTaskFor
         useForm<DailyTaskUpdateFields>({
             defaultValues: {
                 status: STATUS_OPTIONS[0],
-                updatedEta: new Date().toISOString().split("T")[0],
+                updatedEta: new Date().toLocaleDateString("en-CA"),
                 comment: "",
                 effortHours: 0,
             }
@@ -72,7 +72,7 @@ export default function UpdateTaskForm({ task, memberId, onBack }: UpdateTaskFor
 
 
     console.log("Task Data Received:", task);
-    const formattedEta = task.expectedEta ? new Date(task.expectedEta).toISOString().split('T')[0] : "";
+    const formattedEta = task.expectedEta ? new Date(task.expectedEta).toLocaleDateString("en-CA"): "";
 
 
     const currentStatus = taskUpdates?.[0]?.status ?? null;
