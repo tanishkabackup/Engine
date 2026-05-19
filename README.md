@@ -127,7 +127,7 @@ This starts four services:
 | taskinsight-frontend | 3000 | Next.js frontend |
 | taskinsight-api | 5000 | ASP.NET Core API |
 | taskinsight-postgres | 5432 | PostgreSQL database |
-| taskinsight-redis | 6379 | Redis cache & session store |
+| taskinsight-redis | 6379 | Redis cache for session store |
 
 ---
 
@@ -150,7 +150,7 @@ http://localhost:3000
 | Architecture | Clean Architecture |
 | Database | PostgreSQL |
 | ORM | Entity Framework Core |
-| Caching | Redis |
+| Session Management | Redis |
 | Authentication | JWT Authentication |
 | Real-Time Communication | SignalR |
 | Background Processing | Hangfire |
