@@ -63,11 +63,10 @@ namespace TaskInsightEngine.Api
                 db.Database.Migrate();
             }
 
-             if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            
+            app.UseSwagger();
+            app.UseSwaggerUI();
+
 
             app.UseRouting();
 
