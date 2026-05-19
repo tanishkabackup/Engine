@@ -6,7 +6,7 @@ import '@/app/globals.css'
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
-import RiskNotificationListener from "@/_components/notification/RiskNotificationListener";
+import RiskNotificationListener from "@/components/notification/RiskNotificationListener";
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 

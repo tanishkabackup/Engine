@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useLogout, useCurrentUser } from '../features/auth/hooks/useAuth';
 import '@/app/globals.css'
 import { Roles } from '@/types/constants';
+import { useCurrentUser, useLogout } from '@/features/auth/hooks/useAuth';
 
 export function Navbar() {
     const pathname = usePathname();

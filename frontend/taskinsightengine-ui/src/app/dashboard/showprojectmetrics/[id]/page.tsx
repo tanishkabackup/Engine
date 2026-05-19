@@ -2,8 +2,8 @@
 
 import { useParams } from "next/navigation";
 import { useGetProjectDashboard } from "@/features/project/hooks/useProjects";
-import { HealthGauge } from "@/_components/metrics/HealthGauge";
-import { WorkLoadTable } from "@/_components/metrics/WorkLoadTable";
+import { HealthGauge } from "@/components/metrics/HealthGauge";
+import { WorkLoadTable } from "@/components/metrics/WorkLoadTable";
 import { useCurrentUser } from "@/features/auth/hooks/useAuth";
 import { TaskHistoryDto, RiskSnapshotDto } from "@/types/response";
 

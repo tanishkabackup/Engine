@@ -95,7 +95,7 @@ export default function LoginForm() {
           {/* API Error Handling */}
           {isError && (
             <div className="animate-in fade-in slide-in-from-top-1 bg-red-50 border border-red-100 text-red-600 text-xs p-3 rounded-xl text-center font-medium">
-              {error?.message || "Invalid email or password"}
+               Login failed. Please enter valid username and password.
             </div>
           )}
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { ProjectSidebar } from "@/_components/sidebar/ProjectSidebar";
+import { ProjectSidebar } from "@/components/sidebar/ProjectSidebar";
 import { useCurrentUser } from "@/features/auth/hooks/useAuth";
 import { useGetProjectDashboard } from "@/features/project/hooks/useProjects";
 import { useParams } from "next/navigation";

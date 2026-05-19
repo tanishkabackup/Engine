@@ -1,5 +1,5 @@
 
-import { Navbar } from "../../_components/Navbar"; 
+import { Navbar } from '@/components/navbar/Navbar';
 import '@/app/globals.css'
 
 export default function DashboardLayout({
