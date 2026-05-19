@@ -12,7 +12,7 @@ services:
       - "5432:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
-
+   
 
   taskinsightengine-redis:
     image: redis:7-alpine
@@ -31,18 +31,35 @@ services:
     container_name: taskinsightengine-api
     restart: unless-stopped
     depends_on:
-      - taskinsightengine-db
-      - taskinsightengine-redis
-
+       - taskinsightengine-db
+       - taskinsightengine-redis  
+  
     environment:
       ASPNETCORE_URLS: http://0.0.0.0:5000
 
       Redis__ConnectionStrings: taskinsightengine-redis:6379,password=${REDIS_PASSWORD},abortConnect=false
+      Redis__ExpiryTime: ${REDIS_EXPIRY_TIME}
 
       ConnectionStrings__DefaultConnection: Host=taskinsightengine-db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
 
+      # JWT
+      Jwt__Issuer: ${JWT_ISSUER}
+      Jwt__Audience: ${JWT_AUDIENCE}
+      Jwt__SecretKey: ${JWT_SECRET}
+      Jwt__ExpiryTime: ${JWT_EXPIRY_MINUTES}
+
+      # COOKIES
+      AuthCookies__AccessTokenMinutes: ${ACCESS_TOKEN_MINUTES}
+      AuthCookies__RefreshTokenDays: ${REFRESH_TOKEN_DAYS}
+
+      # API log table
+      LogSettings__LogTableName: ${LOG_TABLE_NAME}
+      LogSettings__LogFilePath: ${LOG_FILE_PATH}
+
     ports:
       - "5000:5000"
+    volumes:
+      - api_logs:/logs
 
 
   taskinsightengine-frontend:
@@ -68,3 +85,4 @@ services:
 
 volumes:
   pg_data:
+  api_logs:
