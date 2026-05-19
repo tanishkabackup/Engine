@@ -1,4 +1,3 @@
-````md id="v4p8xm"
 # Task Insight Engine
 
 Task Insight Engine is a project monitoring and risk intelligence platform for teams. It provides real-time task tracking, automated risk analysis, and live collaboration tools to improve project visibility and team coordination.
@@ -61,17 +60,11 @@ Task Insight Engine provides a centralized platform for tracking tasks, monitori
 ## Application Flow
 
 1. Register as a Project Manager or Developer.
-
 2. Project Managers can create projects and add team members.
-
 3. Project Managers and Developers can create and assign tasks.
-
 4. Team members can update progress, report blockers, and add comments.
-
 5. Project Managers can subscribe to daily risk updates through the risk settings section.
-
 6. The system automatically analyzes tasks and generates risk scores.
-
 7. Project Managers can view project health and risk insights from the dashboard.
 
 ---
@@ -108,19 +101,16 @@ Built with Clean Architecture.
 - Docker
 - Docker Compose
 
-
 ---
 
 ## Configure
 
-An `.env.example` file is included in the repository.
-
-Create your local environment file:
+An `.env.example` file is included in the repository. Create your local environment file:
 
 
 Update the values in `.env` to match your local setup.
 
-Sensitive configuration such as database credentials, JWT keys, and Redis settings are protected using git-secrets.
+> Sensitive configuration such as database credentials, JWT keys, and Redis settings are protected using git-secrets.
 
 ---
 
@@ -145,7 +135,7 @@ This starts four services:
 
 Open the frontend in your browser:
 
-```text
+```
 http://localhost:3000
 ```
 
@@ -167,4 +157,3 @@ http://localhost:3000
 | Logging & Monitoring | Serilog |
 | Containerization | Docker + Docker Compose |
 | API Documentation | Swagger |
-````
