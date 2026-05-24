@@ -37,7 +37,7 @@ namespace TaskInsightEngine.Infrastructure.Jobs
             try
             {
                 var today = DateTime.UtcNow.Date;
-                var subscriptions = await _riskRepository.GetRiskSubscriptionAsync(email).ConfigureAwait(false);
+                var subscriptions = await _riskRepository.GetRiskSubscriptionAsync(email);
 
                 if (subscriptions == null || subscriptions.Count == 0)
                 {
@@ -55,7 +55,7 @@ namespace TaskInsightEngine.Infrastructure.Jobs
                     var getOpenTaskResponse = await _riskRepository.GetOpenTaskItems(projectId);
                     var getRiskSnapshotResponse = await _riskRepository.GetLatestRiskSnapshot(projectId);
 
-                    //await Task.WhenAll(getOpenTaskResponse, getRiskSnapshotResponse).ConfigureAwait(false);
+                    
 
                     var taskResponse = getOpenTaskResponse;
                     var latestRisks = getRiskSnapshotResponse;
@@ -121,9 +121,9 @@ namespace TaskInsightEngine.Infrastructure.Jobs
 
                 if (allSnapshots.Count != 0)
                 {
-                    await _riskRepository.AddRiskSnapShotAsync(allSnapshots).ConfigureAwait(false);
+                    await _riskRepository.AddRiskSnapShotAsync(allSnapshots);
 
-                    await ProcessBriefingsAndNotifications(email, allSnapshots).ConfigureAwait(false);
+                    await ProcessBriefingsAndNotifications(email, allSnapshots);
                 }
 
                 _logger.LogInformation("Daily Risk Job successfully finished for: {Email}", email);
@@ -207,7 +207,7 @@ namespace TaskInsightEngine.Infrastructure.Jobs
                     ProjectName = projectInfo.ProjectName,
                     ProjectId = projectInfo.ProjectId,
                     BriefingDetails = briefingResponse.BriefingDetails
-                }).ConfigureAwait(false);
+                });
 
                 _logger.LogInformation("Briefing notification sent to {Email} for Project {ProjectId}", email, project.Key);
             }
